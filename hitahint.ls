@@ -241,17 +241,8 @@ class SelectorMode
     chrome.extension.sendMessage(
       {mes: "keyUpSelectorDecide", item:{id: id, url: url, type: type, query: query}},
       ((res) -> console.log(res)))
+    $('#selectorInput').val('')
     false
-#   @keyUpSelectorCursorEnter =->
-#     console.log('keyUpSelectorCursorEnter')
-#     [type, id] = $('#selectorList tr.selected').attr('id').split('-')
-#     url = $('#selectorList tr.selected span.url').text()
-#     query = $('#selectorInput').val()
-#     @@keyUpCancel()
-#     chrome.extension.sendMessage(
-#       {mes: "keyUpSelectorCursorEnter", item:{id: id, url: url, type: type, query: query}},
-#       ((res) -> console.log(res)))
-#     false
 
 Main.start =->
   Main.mode = NeutralMode

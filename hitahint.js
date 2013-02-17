@@ -372,6 +372,7 @@ SelectorMode = (function(){
     }, function(res){
       return console.log(res);
     });
+    $('#selectorInput').val('');
     return false;
   };
   function SelectorMode(){}
