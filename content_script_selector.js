@@ -1,4 +1,4 @@
-var p, ITEM_TYPE_OF, SELECTOR_NUM, WEB_SEARCH_LIST, makeSelectorConsole, filtering, SelectorMode, Selector;
+var p, ITEM_TYPE_OF, SELECTOR_NUM, WEB_SEARCH_LIST, makeSelectorConsole, SelectorMode, Selector;
 p = prelude;
 ITEM_TYPE_OF = {
   tab: 'TAB',
@@ -36,23 +36,6 @@ makeSelectorConsole = function(list){
   $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
   return $('#selectorList tr:first').addClass("selected");
 };
-filtering = function(text, list){
-  var matchP;
-  matchP = function(elem, queries){
-    var q;
-    return p.all(p.id, (function(){
-      var i$, ref$, len$, results$ = [];
-      for (i$ = 0, len$ = (ref$ = queries).length; i$ < len$; ++i$) {
-        q = ref$[i$];
-        results$.push(elem.title.toLowerCase().search(q) !== -1 || elem.url.toLowerCase().search(q) !== -1 || ITEM_TYPE_OF[elem.type].toLowerCase().search(q) !== -1);
-      }
-      return results$;
-    }()));
-  };
-  return p.filter(function(t){
-    return matchP(t, text.toLowerCase().split(' '));
-  }, list);
-};
 SelectorMode = (function(){
   SelectorMode.displayName = 'SelectorMode';
   var prototype = SelectorMode.prototype, constructor = SelectorMode;
@@ -72,9 +55,9 @@ SelectorMode = (function(){
   SelectorMode.keydownMap = function(e){
     switch (e.keyCode) {
     case KEY_CODE.MOVE_NEXT_SELECTOR_CURSOR:
-      return constructor.keyUpSelectorCursorNext(e);
+      return constructor.keyDownSelectorCursorNext(e);
     case KEY_CODE.MOVE_PREV_SELECTOR_CURSOR:
-      return constructor.keyUpSelectorCursorPrev(e);
+      return constructor.keyDownSelectorCursorPrev(e);
     default:
       return function(){
         return alert(e.keyCode);
@@ -87,29 +70,43 @@ SelectorMode = (function(){
     return $(':focus').blur();
   };
   SelectorMode.keyUpSelectorFiltering = function(e){
-    var text, list;
+    var filtering, text;
     if (e.keyCode < 65 || e.keyCode > 90) {
       return false;
     }
+    filtering = function(text, list){
+      var matchP;
+      matchP = function(elem, queries){
+        var q;
+        return p.all(p.id, (function(){
+          var i$, ref$, len$, results$ = [];
+          for (i$ = 0, len$ = (ref$ = queries).length; i$ < len$; ++i$) {
+            q = ref$[i$];
+            results$.push(elem.title.toLowerCase().search(q) !== -1 || elem.url.toLowerCase().search(q) !== -1 || ITEM_TYPE_OF[elem.type].toLowerCase().search(q) !== -1);
+          }
+          return results$;
+        }()));
+      };
+      return p.filter(function(t){
+        return matchP(t, text.toLowerCase().split(' '));
+      }, list);
+    };
     console.log('keyUpSelectorFiltering');
     text = $('#selectorInput').val();
-    console.log(text);
-    list = filtering(text, Main.list).concat(WEB_SEARCH_LIST);
-    console.log(list);
-    makeSelectorConsole(list);
+    makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST));
     return $('#selectorConsole').show();
   };
   SelectorMode.keyUpSelectorToggle = function(){
     Main.mode = NeutralMode;
     return $('#selectorConsole').hide();
   };
-  SelectorMode.keyUpSelectorCursorNext = function(e){
-    console.log('keyUpSelectorCursorNext');
+  SelectorMode.keyDownSelectorCursorNext = function(e){
+    console.log('keyDownSelectorCursorNext');
     $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
     return e.preventDefault();
   };
-  SelectorMode.keyUpSelectorCursorPrev = function(e){
-    console.log('keyUpSelectorCursorPrev');
+  SelectorMode.keyDownSelectorCursorPrev = function(e){
+    console.log('keyDownSelectorCursorPrev');
     $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
     return e.preventDefault();
   };

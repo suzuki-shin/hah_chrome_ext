@@ -18,16 +18,16 @@ makeSelectorConsole = (list) ->
   $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
   $('#selectorList tr:first').addClass("selected")
 
-# 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
-# filtering :: String -> [{title, url, type}] -> [{title, url, type}]
-filtering = (text, list) ->
-  # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
-  # titleAndUrlMatch :: Elem -> [String] -> Bool
-  matchP = (elem, queries) ->
-    p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
-                 elem.url.toLowerCase().search(q) isnt -1 or
-                 ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
-  p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
+# # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
+# # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
+# filtering = (text, list) ->
+#   # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
+#   # titleAndUrlMatch :: Elem -> [String] -> Bool
+#   matchP = (elem, queries) ->
+#     p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
+#                  elem.url.toLowerCase().search(q) isnt -1 or
+#                  ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
+#   p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
 
 
 class SelectorMode
@@ -40,8 +40,8 @@ class SelectorMode
 
   @keydownMap = (e) ->
     switch e.keyCode
-    case KEY_CODE.MOVE_NEXT_SELECTOR_CURSOR then @@keyUpSelectorCursorNext(e)
-    case KEY_CODE.MOVE_PREV_SELECTOR_CURSOR then @@keyUpSelectorCursorPrev(e)
+    case KEY_CODE.MOVE_NEXT_SELECTOR_CURSOR then @@keyDownSelectorCursorNext(e)
+    case KEY_CODE.MOVE_PREV_SELECTOR_CURSOR then @@keyDownSelectorCursorPrev(e)
     default (-> alert(e.keyCode))
 
   @keyUpCancel =->
@@ -52,26 +52,37 @@ class SelectorMode
   @keyUpSelectorFiltering = (e) ->
     return false if e.keyCode < 65 or e.keyCode > 90
 
+    # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
+    # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
+    filtering = (text, list) ->
+      # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
+      # titleAndUrlMatch :: Elem -> [String] -> Bool
+      matchP = (elem, queries) ->
+        p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
+                     elem.url.toLowerCase().search(q) isnt -1 or
+                     ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
+      p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
+
     console.log('keyUpSelectorFiltering')
     text = $('#selectorInput').val()
-    console.log(text)
-    list = filtering(text, Main.list).concat(WEB_SEARCH_LIST)
-    console.log(list)
-    makeSelectorConsole(list)
-#     makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
+#     console.log(text)
+#     list = filtering(text, Main.list).concat(WEB_SEARCH_LIST)
+#     console.log(list)
+#     makeSelectorConsole(list)
+    makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
     $('#selectorConsole').show()
 
   @keyUpSelectorToggle =->
     Main.mode = NeutralMode
     $('#selectorConsole').hide()
 
-  @keyUpSelectorCursorNext = (e) ->
-    console.log('keyUpSelectorCursorNext')
+  @keyDownSelectorCursorNext = (e) ->
+    console.log('keyDownSelectorCursorNext')
     $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
     e.preventDefault()
 
-  @keyUpSelectorCursorPrev = (e) ->
-    console.log('keyUpSelectorCursorPrev')
+  @keyDownSelectorCursorPrev = (e) ->
+    console.log('keyDownSelectorCursorPrev')
     $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
     e.preventDefault()
 

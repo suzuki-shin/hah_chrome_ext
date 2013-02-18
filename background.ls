@@ -4,7 +4,7 @@ tabSelect = (f, list) ->
   )
 
 historySelect = (f, list) ->
-  chrome.history.search({text:'', maxResults: 100}, (hs) ->
+  chrome.history.search({text:'', maxResults: 1000}, (hs) ->
     f(list.concat([{id: e.id, title: e.title, url: e.url, type: 'history'} for e in hs]))
   )
 

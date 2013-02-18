@@ -22,7 +22,7 @@ tabSelect = function(f, list){
 historySelect = function(f, list){
   return chrome.history.search({
     text: '',
-    maxResults: 100
+    maxResults: 1000
   }, function(hs){
     var e;
     return f(list.concat((function(){
