@@ -85,7 +85,7 @@ class NeutralMode
     case KEY_CODE.START_HITAHINT  then @@keyUpHitAHintStart()
     case KEY_CODE.FOCUS_FORM      then @@keyUpFocusForm()
     case KEY_CODE.TOGGLE_SELECTOR then @@keyUpSelectorToggle()
-    case KEY_CODE.BACK_HISTORY    then @@keyUpHistoryBack()
+#     case KEY_CODE.BACK_HISTORY    then @@keyUpHistoryBack()
     default (-> console.log('default'))
     e.preventDefault()
 

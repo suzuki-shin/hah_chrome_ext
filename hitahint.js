@@ -161,9 +161,6 @@ NeutralMode = (function(){
     case KEY_CODE.TOGGLE_SELECTOR:
       constructor.keyUpSelectorToggle();
       break;
-    case KEY_CODE.BACK_HISTORY:
-      constructor.keyUpHistoryBack();
-      break;
     default:
       (function(){
         return console.log('default');
