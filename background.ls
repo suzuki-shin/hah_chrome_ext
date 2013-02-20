@@ -1,26 +1,37 @@
-tabSelect = (f, list) ->
+tabSelect =->
+  dfd = $.Deferred()
   chrome.tabs.query({currentWindow: true}, (tabs) ->
-    f(list.concat([{id: e.id, title: e.title, url: e.url, type: 'tab'} for e in tabs]))
+    dfd.resolve([{id: e.id, title: e.title, url: e.url, type: 'tab'} for e in tabs])
   )
+  dfd.promise()
 
-historySelect = (f, list) ->
+historySelect =->
+  dfd = $.Deferred()
   chrome.history.search({text:'', maxResults: 1000}, (hs) ->
-    f(list.concat([{id: e.id, title: e.title, url: e.url, type: 'history'} for e in hs]))
+    dfd.resolve([{id: e.id, title: e.title, url: e.url, type: 'history'} for e in hs])
   )
+  dfd.promise()
 
-bookmarkSelect = (f, list) ->
+bookmarkSelect =->
+  dfd = $.Deferred()
   chrome.bookmarks.search("h", (es) ->
-    f(list.concat([{id: e.id, title: e.title, url: e.url, type: 'bookmark'} for e in es when e.url?]))
+    dfd.resolve([{id: e.id, title: e.title, url: e.url, type: 'bookmark'} for e in es when e.url?])
   )
+  dfd.promise()
 
-console.log('background')
+select = (func) ->
+  $.when(
+    tabSelect(),
+    historySelect(),
+    bookmarkSelect()
+  ).done((ts, hs, bs) ->
+    func(ts.concat(hs, bs))
+  )
 
 chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
   console.log(msg)
   if msg.mes == "makeSelectorConsole"
-    historySelect_ = (list) -> historySelect(sendResponse, list)
-    bookmarkSelect_ = (list) -> bookmarkSelect(historySelect_, list)
-    tabSelect(bookmarkSelect_, [])
+    select(sendResponse)
   else if msg.mes == "keyUpSelectorDecide"
     console.log(msg)
     switch msg.item.type
@@ -30,7 +41,9 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
     case "websearch"
       console.log('web search')
       chrome.tabs.create({url: msg.item.url + msg.item.query})
+      select(sendResponse)
     default
       chrome.tabs.create({url: msg.item.url})
+      select(sendResponse)
   true
 )

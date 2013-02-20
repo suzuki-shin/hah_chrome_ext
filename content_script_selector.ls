@@ -54,10 +54,6 @@ class SelectorMode
 
     console.log('keyUpSelectorFiltering')
     text = $('#selectorInput').val()
-#     console.log(text)
-#     list = filtering(text, Main.list).concat(WEB_SEARCH_LIST)
-#     console.log(list)
-#     makeSelectorConsole(list)
     makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
     $('#selectorConsole').show()
 
@@ -83,7 +79,7 @@ class SelectorMode
     @@keyUpCancel()
     chrome.extension.sendMessage(
       {mes: "keyUpSelectorDecide", item:{id: id, url: url, type: type, query: query}},
-      ((res) -> console.log(res)))
+      ((list) -> Main.list = list))
     $('#selectorInput').val('')
     false
 
@@ -98,8 +94,6 @@ class Selector
       console.log('extension.sendMessage')
       console.log(list)
       Main.list = list
-#       $('body').append('<iframe src="selector_console.html"></iframe>')
-#       $('#selectorConsole').append('<form id="selectorForm"><input id="selectorInput" type="text" /></form>')
       $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>')
       makeSelectorConsole(list)
     ))

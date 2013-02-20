@@ -125,8 +125,8 @@ SelectorMode = (function(){
         type: type,
         query: query
       }
-    }, function(res){
-      return console.log(res);
+    }, function(list){
+      return Main.list = list;
     });
     $('#selectorInput').val('');
     return false;

@@ -1,10 +1,12 @@
-var tabSelect, historySelect, bookmarkSelect;
-tabSelect = function(f, list){
-  return chrome.tabs.query({
+var tabSelect, historySelect, bookmarkSelect, select;
+tabSelect = function(){
+  var dfd;
+  dfd = $.Deferred();
+  chrome.tabs.query({
     currentWindow: true
   }, function(tabs){
     var e;
-    return f(list.concat((function(){
+    return dfd.resolve((function(){
       var i$, ref$, len$, results$ = [];
       for (i$ = 0, len$ = (ref$ = tabs).length; i$ < len$; ++i$) {
         e = ref$[i$];
@@ -16,16 +18,19 @@ tabSelect = function(f, list){
         });
       }
       return results$;
-    }())));
+    }()));
   });
+  return dfd.promise();
 };
-historySelect = function(f, list){
-  return chrome.history.search({
+historySelect = function(){
+  var dfd;
+  dfd = $.Deferred();
+  chrome.history.search({
     text: '',
     maxResults: 1000
   }, function(hs){
     var e;
-    return f(list.concat((function(){
+    return dfd.resolve((function(){
       var i$, ref$, len$, results$ = [];
       for (i$ = 0, len$ = (ref$ = hs).length; i$ < len$; ++i$) {
         e = ref$[i$];
@@ -37,13 +42,16 @@ historySelect = function(f, list){
         });
       }
       return results$;
-    }())));
+    }()));
   });
+  return dfd.promise();
 };
-bookmarkSelect = function(f, list){
-  return chrome.bookmarks.search("h", function(es){
+bookmarkSelect = function(){
+  var dfd;
+  dfd = $.Deferred();
+  chrome.bookmarks.search("h", function(es){
     var e;
-    return f(list.concat((function(){
+    return dfd.resolve((function(){
       var i$, ref$, len$, results$ = [];
       for (i$ = 0, len$ = (ref$ = es).length; i$ < len$; ++i$) {
         e = ref$[i$];
@@ -57,21 +65,19 @@ bookmarkSelect = function(f, list){
         }
       }
       return results$;
-    }())));
+    }()));
+  });
+  return dfd.promise();
+};
+select = function(func){
+  return $.when(tabSelect(), historySelect(), bookmarkSelect()).done(function(ts, hs, bs){
+    return func(ts.concat(hs, bs));
   });
 };
-console.log('background');
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
-  var historySelect_, bookmarkSelect_;
   console.log(msg);
   if (msg.mes === "makeSelectorConsole") {
-    historySelect_ = function(list){
-      return historySelect(sendResponse, list);
-    };
-    bookmarkSelect_ = function(list){
-      return bookmarkSelect(historySelect_, list);
-    };
-    tabSelect(bookmarkSelect_, []);
+    select(sendResponse);
   } else if (msg.mes === "keyUpSelectorDecide") {
     console.log(msg);
     switch (msg.item.type) {
@@ -86,11 +92,13 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
       chrome.tabs.create({
         url: msg.item.url + msg.item.query
       });
+      select(sendResponse);
       break;
     default:
       chrome.tabs.create({
         url: msg.item.url
       });
+      select(sendResponse);
     }
   }
   return true;
