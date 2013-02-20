@@ -18,17 +18,6 @@ makeSelectorConsole = (list) ->
   $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
   $('#selectorList tr:first').addClass("selected")
 
-# # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
-# # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
-# filtering = (text, list) ->
-#   # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
-#   # titleAndUrlMatch :: Elem -> [String] -> Bool
-#   matchP = (elem, queries) ->
-#     p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
-#                  elem.url.toLowerCase().search(q) isnt -1 or
-#                  ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
-#   p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
-
 
 class SelectorMode
   @keyupMap = (e) ->
@@ -109,6 +98,8 @@ class Selector
       console.log('extension.sendMessage')
       console.log(list)
       Main.list = list
+#       $('body').append('<iframe src="selector_console.html"></iframe>')
+#       $('#selectorConsole').append('<form id="selectorForm"><input id="selectorInput" type="text" /></form>')
       $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>')
       makeSelectorConsole(list)
     ))
