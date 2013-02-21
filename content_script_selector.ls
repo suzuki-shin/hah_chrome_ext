@@ -21,16 +21,34 @@ makeSelectorConsole = (list) ->
 
 class SelectorMode
   @keyupMap = (e) ->
-    switch e.keyCode
-    case KEY_CODE.CANCEL          then @@keyUpCancel()
-    case KEY_CODE.TOGGLE_SELECTOR then @@keyUpSelectorToggle()
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'CANCEL'          then @@keyUpCancel()
+    case 'TOGGLE_SELECTOR' then @@keyUpSelectorToggle()
     default @@keyUpSelectorFiltering(e)
     e.preventDefault()
 
   @keydownMap = (e) ->
-    switch e.keyCode
-    case KEY_CODE.MOVE_NEXT_SELECTOR_CURSOR then @@keyDownSelectorCursorNext(e)
-    case KEY_CODE.MOVE_PREV_SELECTOR_CURSOR then @@keyDownSelectorCursorPrev(e)
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'MOVE_NEXT_SELECTOR_CURSOR' then @@keyDownSelectorCursorNext(e)
+    case 'MOVE_PREV_SELECTOR_CURSOR' then @@keyDownSelectorCursorPrev(e)
     default (-> alert(e.keyCode))
 
   @keyUpCancel =->

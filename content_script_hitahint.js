@@ -81,18 +81,42 @@ isFocusingForm = function(){
 HitAHintMode = (function(){
   HitAHintMode.displayName = 'HitAHintMode';
   var prototype = HitAHintMode.prototype, constructor = HitAHintMode;
+  HitAHintMode.keydownMap = function(e){
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = true;
+      return;
+    }
+    return console.log('keydownMap');
+  };
   HitAHintMode.keyupMap = function(e){
-    switch (e.keyCode) {
-    case KEY_CODE.CANCEL:
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = false;
+      return;
+    }
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'CANCEL':
       constructor.keyUpCancel();
       break;
     default:
       constructor.keyUpHintKey(e.keyCode);
     }
     return e.preventDefault();
-  };
-  HitAHintMode.keydownMap = function(e){
-    return console.log('keydownMap');
   };
   HitAHintMode.firstKeyCode = null;
   HitAHintMode.keyUpCancel = function(){
@@ -124,15 +148,42 @@ HitAHintMode = (function(){
 FormFocusMode = (function(){
   FormFocusMode.displayName = 'FormFocusMode';
   var prototype = FormFocusMode.prototype, constructor = FormFocusMode;
+  FormFocusMode.keydownMap = function(e){
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = true;
+      return;
+    }
+    return console.log('keydownMap');
+  };
   FormFocusMode.keyupMap = function(e){
-    switch (e.keyCode) {
-    case KEY_CODE.MOVE_NEXT_FORM:
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = false;
+      return;
+    }
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'MOVE_NEXT_FORM':
       constructor.keyUpFormNext();
       break;
-    case KEY_CODE.MOVE_PREV_FORM:
+    case 'MOVE_PREV_FORM':
       constructor.keyUpFormPrev();
       break;
-    case KEY_CODE.CANCEL:
+    case 'CANCEL':
       constructor.keyUpCancel();
       break;
     default:
@@ -141,9 +192,6 @@ FormFocusMode = (function(){
       });
     }
     return e.preventDefault();
-  };
-  FormFocusMode.keydownMap = function(e){
-    return console.log('keydownMap');
   };
   FormFocusMode.keyUpFormNext = function(){
     console.log('keyUpFormNext');

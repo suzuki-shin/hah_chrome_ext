@@ -1,15 +1,66 @@
-var p, KEY_CODE, Main, NeutralMode;
+var p, CTRL_KEYCODE, ALT_KEYCODE, KEY, keyMapper, Main, NeutralMode;
 p = prelude;
-KEY_CODE = {
-  START_HITAHINT: 69,
-  FOCUS_FORM: 70,
-  TOGGLE_SELECTOR: 186,
-  CANCEL: 27,
-  MOVE_NEXT_SELECTOR_CURSOR: 40,
-  MOVE_PREV_SELECTOR_CURSOR: 38,
-  MOVE_NEXT_FORM: 34,
-  MOVE_PREV_FORM: 33,
-  BACK_HISTORY: 72
+CTRL_KEYCODE = 17;
+ALT_KEYCODE = 18;
+KEY = {
+  'START_HITAHINT': {
+    CODE: 69,
+    CTRL: true,
+    ALT: false
+  },
+  'FOCUS_FORM': {
+    CODE: 70,
+    CTRL: true,
+    ALT: false
+  },
+  'TOGGLE_SELECTOR': {
+    CODE: 186,
+    CTRL: true,
+    ALT: false
+  },
+  'CANCEL': {
+    CODE: 27,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_NEXT_SELECTOR_CURSOR': {
+    CODE: 40,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_PREV_SELECTOR_CURSOR': {
+    CODE: 38,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_NEXT_FORM': {
+    CODE: 34,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_PREV_FORM': {
+    CODE: 33,
+    CTRL: false,
+    ALT: false
+  },
+  'BACK_HISTORY': {
+    CODE: 72,
+    CTRL: true,
+    ALT: false
+  }
+};
+keyMapper = function(keyCode, ctrl, alt){
+  var k, v;
+  return p.first((function(){
+    var ref$, results$ = [];
+    for (k in ref$ = KEY) {
+      v = ref$[k];
+      if (v.CODE === keyCode && v.CTRL === ctrl && v.ALT === alt) {
+        results$.push(k);
+      }
+    }
+    return results$;
+  }()));
 };
 Main = (function(){
   Main.displayName = 'Main';
@@ -20,15 +71,42 @@ Main = (function(){
 NeutralMode = (function(){
   NeutralMode.displayName = 'NeutralMode';
   var prototype = NeutralMode.prototype, constructor = NeutralMode;
+  NeutralMode.keydownMap = function(e){
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = true;
+      return;
+    }
+    return console.log('keydownMap');
+  };
   NeutralMode.keyupMap = function(e){
-    switch (e.keyCode) {
-    case KEY_CODE.START_HITAHINT:
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = false;
+      return;
+    }
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'START_HITAHINT':
       constructor.keyUpHitAHintStart();
       break;
-    case KEY_CODE.FOCUS_FORM:
+    case 'FOCUS_FORM':
       constructor.keyUpFocusForm();
       break;
-    case KEY_CODE.TOGGLE_SELECTOR:
+    case 'TOGGLE_SELECTOR':
       constructor.keyUpSelectorToggle();
       break;
     default:
@@ -37,9 +115,6 @@ NeutralMode = (function(){
       });
     }
     return e.preventDefault();
-  };
-  NeutralMode.keydownMap = function(e){
-    return console.log('keydownMap');
   };
   NeutralMode.keyUpHitAHintStart = function(){
     return false;
@@ -57,6 +132,8 @@ NeutralMode = (function(){
   return NeutralMode;
 }());
 Main.start = function(){
+  Main.ctrl = false;
+  Main.alt = false;
   Main.mode = NeutralMode;
   $(document).keyup(function(e){
     return Main.mode.keyupMap(e);

@@ -92,14 +92,13 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
       chrome.tabs.create({
         url: msg.item.url + msg.item.query
       });
-      select(sendResponse);
       break;
     default:
       chrome.tabs.create({
         url: msg.item.url
       });
-      select(sendResponse);
     }
+    select(sendResponse);
   }
   return true;
 });

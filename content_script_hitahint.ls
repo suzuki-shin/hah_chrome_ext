@@ -38,14 +38,31 @@ isFocusingForm =->
 
 
 class HitAHintMode
+  @keydownMap = (e) ->
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+    console.log('keydownMap')
+
   @keyupMap = (e) ->
-    switch e.keyCode
-    case KEY_CODE.CANCEL then @@keyUpCancel()
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'CANCEL' then @@keyUpCancel()
     default @@keyUpHintKey(e.keyCode)
     e.preventDefault()
-
-  @keydownMap = (e) ->
-    console.log('keydownMap')
 
   @firstKeyCode = null
 
@@ -71,16 +88,33 @@ class HitAHintMode
 
 
 class FormFocusMode
+  @keydownMap = (e) ->
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+    console.log('keydownMap')
+
   @keyupMap = (e) ->
-    switch e.keyCode
-    case KEY_CODE.MOVE_NEXT_FORM then @@keyUpFormNext()
-    case KEY_CODE.MOVE_PREV_FORM then @@keyUpFormPrev()
-    case KEY_CODE.CANCEL         then @@keyUpCancel()
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'MOVE_NEXT_FORM' then @@keyUpFormNext()
+    case 'MOVE_PREV_FORM' then @@keyUpFormPrev()
+    case 'CANCEL'         then @@keyUpCancel()
     default (-> console.log('default'))
     e.preventDefault()
-
-  @keydownMap = (e) ->
-    console.log('keydownMap')
 
   @keyUpFormNext =->
     console.log('keyUpFormNext')

@@ -41,9 +41,8 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
     case "websearch"
       console.log('web search')
       chrome.tabs.create({url: msg.item.url + msg.item.query})
-      select(sendResponse)
     default
       chrome.tabs.create({url: msg.item.url})
-      select(sendResponse)
+    select(sendResponse)
   true
 )

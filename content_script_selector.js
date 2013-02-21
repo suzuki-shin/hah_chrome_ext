@@ -40,11 +40,23 @@ SelectorMode = (function(){
   SelectorMode.displayName = 'SelectorMode';
   var prototype = SelectorMode.prototype, constructor = SelectorMode;
   SelectorMode.keyupMap = function(e){
-    switch (e.keyCode) {
-    case KEY_CODE.CANCEL:
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = false;
+      return;
+    }
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'CANCEL':
       constructor.keyUpCancel();
       break;
-    case KEY_CODE.TOGGLE_SELECTOR:
+    case 'TOGGLE_SELECTOR':
       constructor.keyUpSelectorToggle();
       break;
     default:
@@ -53,10 +65,22 @@ SelectorMode = (function(){
     return e.preventDefault();
   };
   SelectorMode.keydownMap = function(e){
-    switch (e.keyCode) {
-    case KEY_CODE.MOVE_NEXT_SELECTOR_CURSOR:
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = true;
+      return;
+    }
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'MOVE_NEXT_SELECTOR_CURSOR':
       return constructor.keyDownSelectorCursorNext(e);
-    case KEY_CODE.MOVE_PREV_SELECTOR_CURSOR:
+    case 'MOVE_PREV_SELECTOR_CURSOR':
       return constructor.keyDownSelectorCursorPrev(e);
     default:
       return function(){
