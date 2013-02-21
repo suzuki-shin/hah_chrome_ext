@@ -1,6 +1,7 @@
-var p, FORM_INPUT_FIELDS, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, HitAHintMode, FormFocusMode, HitAHint;
+var p, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, HitAHintMode, FormFocusMode, HitAHint;
 p = prelude;
 FORM_INPUT_FIELDS = 'input[type="text"], textarea, select';
+CLICKABLES = 'a';
 _HINT_KEYS = {
   65: 'A',
   66: 'B',
@@ -96,7 +97,7 @@ HitAHintMode = (function(){
   HitAHintMode.firstKeyCode = null;
   HitAHintMode.keyUpCancel = function(){
     Main.mode = NeutralMode;
-    Main.links.removeClass('links');
+    $(CLICKABLES).removeClass('links');
     $('.hintKey').remove();
     return constructor.firstKeyCode = null;
   };
@@ -110,9 +111,9 @@ HitAHintMode = (function(){
       return this.firstKeyCode = keyCode;
     } else {
       idx = keyCodeToIndex(this.firstKeyCode, keyCode);
-      Main.links[idx].click();
+      $(CLICKABLES)[idx].click();
       Main.mode = NeutralMode;
-      Main.links.removeClass('links');
+      $(CLICKABLES).removeClass('links');
       $('.hintKey').remove();
       return this.firstKeyCode = null;
     }
@@ -178,7 +179,7 @@ NeutralMode.keyUpFocusForm = function(){
 };
 NeutralMode.keyUpHitAHintStart = function(){
   Main.mode = HitAHintMode;
-  return Main.links.addClass('links').html(function(i, oldHtml){
+  return $(CLICKABLES).addClass('links').html(function(i, oldHtml){
     if (HINT_KEYS[indexToKeyCode(i)] != null) {
       return '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml;
     } else {
@@ -190,9 +191,6 @@ HitAHint = (function(){
   HitAHint.displayName = 'HitAHint';
   var prototype = HitAHint.prototype, constructor = HitAHint;
   constructor.start = function(){
-    var _clickables;
-    _clickables = $('a');
-    Main.links = _clickables.length === void 8 ? [_clickables] : _clickables;
     if (isFocusingForm()) {
       Main.mode = FormFocusMode;
     }

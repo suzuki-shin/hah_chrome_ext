@@ -1,6 +1,8 @@
 p = prelude
 
 FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
+CLICKABLES = 'a'
+# CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
 
 _HINT_KEYS = {65:'A', 66:'B', 67:'C', 68:'D', 69:'E', 70:'F', 71:'G', 72:'H', 73:'I', 74:'J', 75:'K', 76:'L', 77:'M', 78:'N', 79:'O', 80:'P', 81:'Q', 82:'R', 83:'S', 84:'T', 85:'U', 86:'V', 87:'W', 88:'X', 89:'Y', 90:'Z'}
 HINT_KEYS = {}
@@ -48,7 +50,7 @@ class HitAHintMode
 
   @keyUpCancel =->
     Main.mode = NeutralMode
-    Main.links.removeClass('links')
+    $(CLICKABLES).removeClass('links')
     $('.hintKey').remove()
     @@firstKeyCode = null
 
@@ -60,9 +62,9 @@ class HitAHintMode
       @firstKeyCode = keyCode
     else
       idx = keyCodeToIndex(@firstKeyCode,  keyCode)
-      Main.links[idx].click()
+      $(CLICKABLES)[idx].click()
       Main.mode = NeutralMode
-      Main.links.removeClass('links')
+      $(CLICKABLES).removeClass('links')
       $('.hintKey').remove()
       @firstKeyCode = null
 
@@ -109,16 +111,13 @@ NeutralMode.keyUpFocusForm =->
 
 NeutralMode.keyUpHitAHintStart =->
   Main.mode = HitAHintMode
-  Main.links.addClass('links').html((i, oldHtml) ->
+  $(CLICKABLES).addClass('links').html((i, oldHtml) ->
     if HINT_KEYS[indexToKeyCode(i)]?
     then '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml
     else oldHtml)
 
 class HitAHint
   @@start =->
-  #   _clickables = $("a[href],input:not([type=hidden]),textarea,select,*[onclick],button")
-    _clickables = $('a')
-    Main.links = if _clickables.length is void then [_clickables] else _clickables
     if isFocusingForm() then Main.mode = FormFocusMode
 
     $(FORM_INPUT_FIELDS).focus(->
