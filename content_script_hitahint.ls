@@ -47,7 +47,12 @@ class HitAHintMode
     if e.keyCode is CTRL_KEYCODE
       Main.ctrl = on
       return
-    console.log('keydownMap')
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'CANCEL' then @@keyUpCancel(e)
+
+    if isHitAHintKey(e.keyCode) then @@keyUpHintKey(e)
+#     e.preventDefault()
 
   @keyupMap = (e) ->
     console.log('mode: ' + Main.mode)
@@ -59,27 +64,29 @@ class HitAHintMode
       Main.ctrl = off
       return
 
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-    case 'CANCEL' then @@keyUpCancel()
-    default @@keyUpHintKey(e.keyCode)
-    e.preventDefault()
+#     if isHitAHintKey(e.keyCode) then @@keyUpHintKey(e)
+#     case 'CANCEL' then @@keyUpCancel()
+#     default @@keyUpHintKey(e.keyCode)
+#     e.preventDefault()
 
   @firstKeyCode = null
 
-  @keyUpCancel =->
+  @keyUpCancel = (e) ->
+    e.preventDefault()
     Main.mode = NeutralMode
     $(CLICKABLES).removeClass('links')
     $('.hintKey').remove()
     @@firstKeyCode = null
 
-  @keyUpHintKey = (keyCode) ->
-    console.log('hit!: ' + keyCode + ', 1stkey: ' + @firstKeyCode)
-    return if not isHitAHintKey(keyCode)
+  @keyUpHintKey = (e) ->
+    e.preventDefault()
+    console.log('hit!: ' + e.keyCode + ', 1stkey: ' + @firstKeyCode)
 
     if @firstKeyCode is null
-      @firstKeyCode = keyCode
+      @firstKeyCode = e.keyCode
     else
-      idx = keyCodeToIndex(@firstKeyCode,  keyCode)
+      idx = keyCodeToIndex(@firstKeyCode,  e.keyCode)
+      console.log('idx: ' + idx)
       $(CLICKABLES)[idx].click()
       Main.mode = NeutralMode
       $(CLICKABLES).removeClass('links')
@@ -110,13 +117,14 @@ class FormFocusMode
       return
 
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-    case 'MOVE_NEXT_FORM' then @@keyUpFormNext()
-    case 'MOVE_PREV_FORM' then @@keyUpFormPrev()
-    case 'CANCEL'         then @@keyUpCancel()
+    case 'MOVE_NEXT_FORM' then @@keyUpFormNext(e)
+    case 'MOVE_PREV_FORM' then @@keyUpFormPrev(e)
+    case 'CANCEL'         then @@keyUpCancel(e)
     default (-> console.log('default'))
-    e.preventDefault()
+#     e.preventDefault()
 
-  @keyUpFormNext =->
+  @keyUpFormNext = (e) ->
+    e.preventDefault()
     console.log('keyUpFormNext')
     Main.formInputFieldIndex += 1
     console.log(Main.formInputFieldIndex)
@@ -125,7 +133,8 @@ class FormFocusMode
     if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
       $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
 
-  @keyUpFormPrev =->
+  @keyUpFormPrev = (e) ->
+    e.preventDefault()
     console.log('keyUpFormPrev')
     Main.formInputFieldIndex -= 1
     console.log(Main.formInputFieldIndex)
@@ -134,7 +143,8 @@ class FormFocusMode
     if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
       $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
 
-  @keyUpCancel =->
+  @keyUpCancel = (e) ->
+    e.preventDefault()
     Main.mode = NeutralMode
     $(':focus').blur()
 

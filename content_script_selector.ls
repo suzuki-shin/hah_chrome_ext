@@ -20,22 +20,6 @@ makeSelectorConsole = (list) ->
 
 
 class SelectorMode
-  @keyupMap = (e) ->
-    console.log('mode: ' + Main.mode)
-    console.log('keyCode: ' + e.keyCode)
-    console.log('Ctrl: ' + Main.ctrl)
-    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-    if e.keyCode is CTRL_KEYCODE
-      Main.ctrl = off
-      return
-
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-    case 'CANCEL'          then @@keyUpCancel()
-    case 'TOGGLE_SELECTOR' then @@keyUpSelectorToggle()
-    default @@keyUpSelectorFiltering(e)
-    e.preventDefault()
-
   @keydownMap = (e) ->
     console.log('mode: ' + Main.mode)
     console.log('keyCode: ' + e.keyCode)
@@ -49,15 +33,39 @@ class SelectorMode
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
     case 'MOVE_NEXT_SELECTOR_CURSOR' then @@keyDownSelectorCursorNext(e)
     case 'MOVE_PREV_SELECTOR_CURSOR' then @@keyDownSelectorCursorPrev(e)
+    case 'CANCEL'                    then @@keyUpCancel(e)
+#     e.preventDefault()
     default (-> alert(e.keyCode))
 
-  @keyUpCancel =->
+  @keyupMap = (e) ->
+    console.log('mode: ' + Main.mode)
+    console.log('keyCode: ' + e.keyCode)
+    console.log('Ctrl: ' + Main.ctrl)
+    console.log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    @@keyUpSelectorFiltering(e)
+#     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+#     case 'CANCEL'          then @@keyUpCancel()
+#     case 'TOGGLE_SELECTOR' then @@keyUpSelectorToggle()
+#     default @@keyUpSelectorFiltering(e)
+#     e.preventDefault()
+
+  @keyUpCancel = (e) ->
+    e.preventDefault()
     Main.mode = NeutralMode
     $('#selectorConsole').hide()
     $(':focus').blur()
 
   @keyUpSelectorFiltering = (e) ->
-    return false if e.keyCode < 65 or e.keyCode > 90
+    console.log('keyUpSelectorFiltering1')
+    if e.keyCode < 65 or e.keyCode > 90
+      return
+#       return false
+    console.log('keyUpSelectorFiltering2')
 
     # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
     # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
@@ -75,26 +83,29 @@ class SelectorMode
     makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
     $('#selectorConsole').show()
 
-  @keyUpSelectorToggle =->
+  @keyUpSelectorToggle = (e) ->
+    e.preventDefault()
     Main.mode = NeutralMode
     $('#selectorConsole').hide()
 
   @keyDownSelectorCursorNext = (e) ->
+    e.preventDefault()
     console.log('keyDownSelectorCursorNext')
     $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
-    e.preventDefault()
 
   @keyDownSelectorCursorPrev = (e) ->
+    e.preventDefault()
     console.log('keyDownSelectorCursorPrev')
     $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
-    e.preventDefault()
 
-  @keyUpSelectorDecide =->
+  @keyUpSelectorDecide = (e) ->
+    console.log('keyUpSelectorDecide')
+    e.preventDefault()
     console.log('keyUpSelectorDecide')
     [type, id] = $('#selectorList tr.selected').attr('id').split('-')
     url = $('#selectorList tr.selected span.url').text()
     query = $('#selectorInput').val()
-    @@keyUpCancel()
+    @@keyUpCancel(e)
     chrome.extension.sendMessage(
       {mes: "keyUpSelectorDecide", item:{id: id, url: url, type: type, query: query}},
       ((list) -> Main.list = list))
@@ -116,6 +127,6 @@ class Selector
       makeSelectorConsole(list)
     ))
 
-    $('body').on('submit', '#selectorForm', SelectorMode.keyUpSelectorDecide)
+    $('body').on('submit', '#selectorForm', (e) -> SelectorMode.keyUpSelectorDecide(e))
 
 Selector.start()

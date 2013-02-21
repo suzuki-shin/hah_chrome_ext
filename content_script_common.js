@@ -19,8 +19,8 @@ KEY = {
     ALT: false
   },
   'CANCEL': {
-    CODE: 27,
-    CTRL: false,
+    CODE: 71,
+    CTRL: true,
     ALT: false
   },
   'MOVE_NEXT_SELECTOR_CURSOR': {
@@ -84,7 +84,18 @@ NeutralMode = (function(){
       Main.ctrl = true;
       return;
     }
-    return console.log('keydownMap');
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'START_HITAHINT':
+      return constructor.keyUpHitAHintStart();
+    case 'FOCUS_FORM':
+      return constructor.keyUpFocusForm();
+    case 'TOGGLE_SELECTOR':
+      return constructor.keyUpSelectorToggle();
+    default:
+      return function(){
+        return console.log('default');
+      };
+    }
   };
   NeutralMode.keyupMap = function(e){
     console.log('mode: ' + Main.mode);
@@ -97,24 +108,7 @@ NeutralMode = (function(){
     });
     if (e.keyCode === CTRL_KEYCODE) {
       Main.ctrl = false;
-      return;
     }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
-    case 'START_HITAHINT':
-      constructor.keyUpHitAHintStart();
-      break;
-    case 'FOCUS_FORM':
-      constructor.keyUpFocusForm();
-      break;
-    case 'TOGGLE_SELECTOR':
-      constructor.keyUpSelectorToggle();
-      break;
-    default:
-      (function(){
-        return console.log('default');
-      });
-    }
-    return e.preventDefault();
   };
   NeutralMode.keyUpHitAHintStart = function(){
     return false;

@@ -39,31 +39,6 @@ makeSelectorConsole = function(list){
 SelectorMode = (function(){
   SelectorMode.displayName = 'SelectorMode';
   var prototype = SelectorMode.prototype, constructor = SelectorMode;
-  SelectorMode.keyupMap = function(e){
-    console.log('mode: ' + Main.mode);
-    console.log('keyCode: ' + e.keyCode);
-    console.log('Ctrl: ' + Main.ctrl);
-    console.log({
-      CODE: e.keyCode,
-      CTRL: Main.ctrl,
-      ALT: Main.alt
-    });
-    if (e.keyCode === CTRL_KEYCODE) {
-      Main.ctrl = false;
-      return;
-    }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
-    case 'CANCEL':
-      constructor.keyUpCancel();
-      break;
-    case 'TOGGLE_SELECTOR':
-      constructor.keyUpSelectorToggle();
-      break;
-    default:
-      constructor.keyUpSelectorFiltering(e);
-    }
-    return e.preventDefault();
-  };
   SelectorMode.keydownMap = function(e){
     console.log('mode: ' + Main.mode);
     console.log('keyCode: ' + e.keyCode);
@@ -82,22 +57,42 @@ SelectorMode = (function(){
       return constructor.keyDownSelectorCursorNext(e);
     case 'MOVE_PREV_SELECTOR_CURSOR':
       return constructor.keyDownSelectorCursorPrev(e);
+    case 'CANCEL':
+      return constructor.keyUpCancel(e);
     default:
       return function(){
         return alert(e.keyCode);
       };
     }
   };
-  SelectorMode.keyUpCancel = function(){
+  SelectorMode.keyupMap = function(e){
+    console.log('mode: ' + Main.mode);
+    console.log('keyCode: ' + e.keyCode);
+    console.log('Ctrl: ' + Main.ctrl);
+    console.log({
+      CODE: e.keyCode,
+      CTRL: Main.ctrl,
+      ALT: Main.alt
+    });
+    if (e.keyCode === CTRL_KEYCODE) {
+      Main.ctrl = false;
+      return;
+    }
+    return constructor.keyUpSelectorFiltering(e);
+  };
+  SelectorMode.keyUpCancel = function(e){
+    e.preventDefault();
     Main.mode = NeutralMode;
     $('#selectorConsole').hide();
     return $(':focus').blur();
   };
   SelectorMode.keyUpSelectorFiltering = function(e){
     var filtering, text;
+    console.log('keyUpSelectorFiltering1');
     if (e.keyCode < 65 || e.keyCode > 90) {
-      return false;
+      return;
     }
+    console.log('keyUpSelectorFiltering2');
     filtering = function(text, list){
       var matchP;
       matchP = function(elem, queries){
@@ -120,27 +115,30 @@ SelectorMode = (function(){
     makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST));
     return $('#selectorConsole').show();
   };
-  SelectorMode.keyUpSelectorToggle = function(){
+  SelectorMode.keyUpSelectorToggle = function(e){
+    e.preventDefault();
     Main.mode = NeutralMode;
     return $('#selectorConsole').hide();
   };
   SelectorMode.keyDownSelectorCursorNext = function(e){
+    e.preventDefault();
     console.log('keyDownSelectorCursorNext');
-    $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
-    return e.preventDefault();
+    return $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
   };
   SelectorMode.keyDownSelectorCursorPrev = function(e){
+    e.preventDefault();
     console.log('keyDownSelectorCursorPrev');
-    $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
-    return e.preventDefault();
+    return $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
   };
-  SelectorMode.keyUpSelectorDecide = function(){
+  SelectorMode.keyUpSelectorDecide = function(e){
     var ref$, type, id, url, query;
+    console.log('keyUpSelectorDecide');
+    e.preventDefault();
     console.log('keyUpSelectorDecide');
     ref$ = $('#selectorList tr.selected').attr('id').split('-'), type = ref$[0], id = ref$[1];
     url = $('#selectorList tr.selected span.url').text();
     query = $('#selectorInput').val();
-    constructor.keyUpCancel();
+    constructor.keyUpCancel(e);
     chrome.extension.sendMessage({
       mes: "keyUpSelectorDecide",
       item: {
@@ -176,7 +174,9 @@ Selector = (function(){
       $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>');
       return makeSelectorConsole(list);
     });
-    return $('body').on('submit', '#selectorForm', SelectorMode.keyUpSelectorDecide);
+    return $('body').on('submit', '#selectorForm', function(e){
+      return SelectorMode.keyUpSelectorDecide(e);
+    });
   };
   function Selector(){}
   return Selector;

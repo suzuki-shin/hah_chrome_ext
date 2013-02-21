@@ -94,7 +94,13 @@ HitAHintMode = (function(){
       Main.ctrl = true;
       return;
     }
-    return console.log('keydownMap');
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    case 'CANCEL':
+      constructor.keyUpCancel(e);
+    }
+    if (isHitAHintKey(e.keyCode)) {
+      return constructor.keyUpHintKey(e);
+    }
   };
   HitAHintMode.keyupMap = function(e){
     console.log('mode: ' + Main.mode);
@@ -107,34 +113,25 @@ HitAHintMode = (function(){
     });
     if (e.keyCode === CTRL_KEYCODE) {
       Main.ctrl = false;
-      return;
     }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
-    case 'CANCEL':
-      constructor.keyUpCancel();
-      break;
-    default:
-      constructor.keyUpHintKey(e.keyCode);
-    }
-    return e.preventDefault();
   };
   HitAHintMode.firstKeyCode = null;
-  HitAHintMode.keyUpCancel = function(){
+  HitAHintMode.keyUpCancel = function(e){
+    e.preventDefault();
     Main.mode = NeutralMode;
     $(CLICKABLES).removeClass('links');
     $('.hintKey').remove();
     return constructor.firstKeyCode = null;
   };
-  HitAHintMode.keyUpHintKey = function(keyCode){
+  HitAHintMode.keyUpHintKey = function(e){
     var idx;
-    console.log('hit!: ' + keyCode + ', 1stkey: ' + this.firstKeyCode);
-    if (!isHitAHintKey(keyCode)) {
-      return;
-    }
+    e.preventDefault();
+    console.log('hit!: ' + e.keyCode + ', 1stkey: ' + this.firstKeyCode);
     if (this.firstKeyCode === null) {
-      return this.firstKeyCode = keyCode;
+      return this.firstKeyCode = e.keyCode;
     } else {
-      idx = keyCodeToIndex(this.firstKeyCode, keyCode);
+      idx = keyCodeToIndex(this.firstKeyCode, e.keyCode);
+      console.log('idx: ' + idx);
       $(CLICKABLES)[idx].click();
       Main.mode = NeutralMode;
       $(CLICKABLES).removeClass('links');
@@ -178,22 +175,19 @@ FormFocusMode = (function(){
     }
     switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
     case 'MOVE_NEXT_FORM':
-      constructor.keyUpFormNext();
-      break;
+      return constructor.keyUpFormNext(e);
     case 'MOVE_PREV_FORM':
-      constructor.keyUpFormPrev();
-      break;
+      return constructor.keyUpFormPrev(e);
     case 'CANCEL':
-      constructor.keyUpCancel();
-      break;
+      return constructor.keyUpCancel(e);
     default:
-      (function(){
+      return function(){
         return console.log('default');
-      });
+      };
     }
-    return e.preventDefault();
   };
-  FormFocusMode.keyUpFormNext = function(){
+  FormFocusMode.keyUpFormNext = function(e){
+    e.preventDefault();
     console.log('keyUpFormNext');
     Main.formInputFieldIndex += 1;
     console.log(Main.formInputFieldIndex);
@@ -203,7 +197,8 @@ FormFocusMode = (function(){
       return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
     }
   };
-  FormFocusMode.keyUpFormPrev = function(){
+  FormFocusMode.keyUpFormPrev = function(e){
+    e.preventDefault();
     console.log('keyUpFormPrev');
     Main.formInputFieldIndex -= 1;
     console.log(Main.formInputFieldIndex);
@@ -213,7 +208,8 @@ FormFocusMode = (function(){
       return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
     }
   };
-  FormFocusMode.keyUpCancel = function(){
+  FormFocusMode.keyUpCancel = function(e){
+    e.preventDefault();
     Main.mode = NeutralMode;
     return $(':focus').blur();
   };
