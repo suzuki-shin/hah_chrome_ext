@@ -1,6 +1,6 @@
 var p, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, HitAHintMode, FormFocusMode, HitAHint;
 p = prelude;
-FORM_INPUT_FIELDS = 'input[type="text"], textarea, select';
+FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select';
 CLICKABLES = 'a';
 _HINT_KEYS = {
   65: 'A',
@@ -194,11 +194,11 @@ HitAHint = (function(){
     if (isFocusingForm()) {
       Main.mode = FormFocusMode;
     }
-    $(FORM_INPUT_FIELDS).focus(function(){
+    $('body').on('focus', FORM_INPUT_FIELDS, function(){
       console.log('form focus');
       return Main.mode = FormFocusMode;
     });
-    return $(FORM_INPUT_FIELDS).blur(function(){
+    return $('body').on('blur', FORM_INPUT_FIELDS, function(){
       console.log('form blur');
       return Main.mode = NeutralMode;
     });

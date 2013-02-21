@@ -1,6 +1,7 @@
 p = prelude
 
-FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
+FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select'
+# FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
 CLICKABLES = 'a'
 # CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
 
@@ -120,13 +121,13 @@ class HitAHint
   @@start =->
     if isFocusingForm() then Main.mode = FormFocusMode
 
-    $(FORM_INPUT_FIELDS).focus(->
+    $('body').on('focus', FORM_INPUT_FIELDS, (->
       console.log('form focus')
       Main.mode = FormFocusMode
-    )
-    $(FORM_INPUT_FIELDS).blur(->
+    ))
+    $('body').on('blur', FORM_INPUT_FIELDS, (->
       console.log('form blur')
       Main.mode = NeutralMode
-    )
+    ))
 
 HitAHint.start()
