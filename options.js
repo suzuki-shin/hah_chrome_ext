@@ -1,4 +1,4 @@
-var AVAILABLE_KEYCODES, res$, k, ref$, v, DEFAULT_SETTINGS, restoreSettings, saveSettings;
+var AVAILABLE_KEYCODES, res$, k, ref$, v, restoreSettings, saveSettings;
 res$ = [];
 for (k in ref$ = KEYMAP) {
   v = ref$[k];
@@ -7,53 +7,6 @@ for (k in ref$ = KEYMAP) {
   }
 }
 AVAILABLE_KEYCODES = res$;
-DEFAULT_SETTINGS = {
-  'START_HITAHINT': {
-    CODE: 69,
-    CTRL: true,
-    ALT: false
-  },
-  'FOCUS_FORM': {
-    CODE: 70,
-    CTRL: true,
-    ALT: false
-  },
-  'TOGGLE_SELECTOR': {
-    CODE: 186,
-    CTRL: true,
-    ALT: false
-  },
-  'CANCEL': {
-    CODE: 71,
-    CTRL: true,
-    ALT: false
-  },
-  'MOVE_NEXT_SELECTOR_CURSOR': {
-    CODE: 40,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_PREV_SELECTOR_CURSOR': {
-    CODE: 38,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_NEXT_FORM': {
-    CODE: 34,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_PREV_FORM': {
-    CODE: 33,
-    CTRL: false,
-    ALT: false
-  },
-  'BACK_HISTORY': {
-    CODE: 72,
-    CTRL: true,
-    ALT: false
-  }
-};
 restoreSettings = function(){
   var _settings, settings, hitahint_start_code, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, cancel_code, cancel_ctrl, cancel_alt;
   _settings = localStorage.settings;

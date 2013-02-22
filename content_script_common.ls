@@ -3,17 +3,25 @@ p = prelude
 CTRL_KEYCODE = 17
 ALT_KEYCODE = 18
 
-KEY =
-  'START_HITAHINT':            {CODE: 69,  CTRL: on,  ALT: off} # Ctrl+e
-  'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
-  'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
-  'CANCEL':                    {CODE: 71,  CTRL: on,  ALT: off} # Ctrl+g
-#   'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off} # ESC
-  'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off} # down
-  'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off} # up
-  'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup
-  'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off} # pagedown
-  'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off} # Ctrl+h
+# KEY =
+#   'START_HITAHINT':            {CODE: 69,  CTRL: on,  ALT: off} # Ctrl+e
+#   'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
+#   'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
+#   'CANCEL':                    {CODE: 71,  CTRL: on,  ALT: off} # Ctrl+g
+# #   'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off} # ESC
+#   'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off} # down
+#   'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off} # up
+#   'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup
+#   'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off} # pagedown
+#   'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off} # Ctrl+h
+
+# KEY = if localStorage['settings']
+#       then JSON.parse(localStorage['settings'])
+#       else DEFAULT_SETTINGS
+
+KEY = DEFAULT_SETTINGS
+if localStorage.settings then KEY <<< localStorage.settings
+console.log(KEY)
 
 keyMapper = (keyCode, ctrl, alt) ->
   p.first([k for k, v of KEY when v.CODE == keyCode and v.CTRL == ctrl and v.ALT == alt])

@@ -1,16 +1,5 @@
 AVAILABLE_KEYCODES = [parseInt(k) for k, v of KEYMAP when k >= 27]
 
-DEFAULT_SETTINGS =
-  'START_HITAHINT':            {CODE: 69,  CTRL: on,  ALT: off} # Ctrl+e
-  'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
-  'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
-  'CANCEL':                    {CODE: 71,  CTRL: on,  ALT: off} # Ctrl+g
-  'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off} # down
-  'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off} # up
-  'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup
-  'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off} # pagedown
-  'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off} # Ctrl+h
-
 restoreSettings =->
   _settings = localStorage.settings
   settings = if _settings then JSON.parse(_settings) else DEFAULT_SETTINGS

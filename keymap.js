@@ -1,4 +1,4 @@
-var KEYMAP, keyCodeFromKeyName;
+var KEYMAP, DEFAULT_SETTINGS, keyCodeFromKeyName;
 KEYMAP = {
   9: 'TAB',
   16: 'SHIFT',
@@ -66,6 +66,53 @@ KEYMAP = {
   188: ',',
   189: '-',
   190: '.'
+};
+DEFAULT_SETTINGS = {
+  'START_HITAHINT': {
+    CODE: 69,
+    CTRL: true,
+    ALT: false
+  },
+  'FOCUS_FORM': {
+    CODE: 70,
+    CTRL: true,
+    ALT: false
+  },
+  'TOGGLE_SELECTOR': {
+    CODE: 186,
+    CTRL: true,
+    ALT: false
+  },
+  'CANCEL': {
+    CODE: 71,
+    CTRL: true,
+    ALT: false
+  },
+  'MOVE_NEXT_SELECTOR_CURSOR': {
+    CODE: 40,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_PREV_SELECTOR_CURSOR': {
+    CODE: 38,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_NEXT_FORM': {
+    CODE: 34,
+    CTRL: false,
+    ALT: false
+  },
+  'MOVE_PREV_FORM': {
+    CODE: 33,
+    CTRL: false,
+    ALT: false
+  },
+  'BACK_HISTORY': {
+    CODE: 72,
+    CTRL: true,
+    ALT: false
+  }
 };
 keyCodeFromKeyName = function(name){
   var ks, res$, k, ref$, v;

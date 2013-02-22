@@ -2,53 +2,11 @@ var p, CTRL_KEYCODE, ALT_KEYCODE, KEY, keyMapper, Main, NeutralMode;
 p = prelude;
 CTRL_KEYCODE = 17;
 ALT_KEYCODE = 18;
-KEY = {
-  'START_HITAHINT': {
-    CODE: 69,
-    CTRL: true,
-    ALT: false
-  },
-  'FOCUS_FORM': {
-    CODE: 70,
-    CTRL: true,
-    ALT: false
-  },
-  'TOGGLE_SELECTOR': {
-    CODE: 186,
-    CTRL: true,
-    ALT: false
-  },
-  'CANCEL': {
-    CODE: 71,
-    CTRL: true,
-    ALT: false
-  },
-  'MOVE_NEXT_SELECTOR_CURSOR': {
-    CODE: 40,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_PREV_SELECTOR_CURSOR': {
-    CODE: 38,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_NEXT_FORM': {
-    CODE: 34,
-    CTRL: false,
-    ALT: false
-  },
-  'MOVE_PREV_FORM': {
-    CODE: 33,
-    CTRL: false,
-    ALT: false
-  },
-  'BACK_HISTORY': {
-    CODE: 72,
-    CTRL: true,
-    ALT: false
-  }
-};
+KEY = DEFAULT_SETTINGS;
+if (localStorage.settings) {
+  import$(KEY, localStorage.settings);
+}
+console.log(KEY);
 keyMapper = function(keyCode, ctrl, alt){
   var k, v;
   return p.first((function(){
@@ -137,3 +95,8 @@ Main.start = function(){
   });
 };
 Main.start();
+function import$(obj, src){
+  var own = {}.hasOwnProperty;
+  for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+  return obj;
+}
