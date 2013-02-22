@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>hah options page</title>
+    <link rel="stylesheet" href="options.css" type="text/css" charset="utf-8">
+<!--     <script type="text/javascript" src="prelude.min.js"></script> -->
+  </head>
+  <body>
+    <h1>hah options page</h1>
+    <table>
+      <tr>
+        <th>hit a hint start:</th>
+        <td>
+          <input type="text" id="hitahint_start" size="7" />
+          <input type="hidden" id="hitahint_start_code" />
+        </td>
+        <td>
+          ctrl: <input type="checkbox" id="hitahint_start_ctrl" />
+          alt: <input type="checkbox" id="hitahint_start_alt" />
+        </td>
+      </tr>
+      <tr>
+        <th>tab selector start:</th>
+        <td>
+          <input type="text" id="tab_select_start" size="7" />
+          <input type="hidden" id="tab_select_start_code" />
+        </td>
+        <td>
+          ctrl: <input type="checkbox" id="tab_select_start_ctrl" />
+          alt: <input type="checkbox" id="tab_select_start_alt" />
+        </td>
+      </tr>
+      <tr>
+        <th>cancel:</th>
+        <td>
+          <input type="text" id="cancel" size="7" />
+          <input type="hidden" id="cancel_code" />
+        </td>
+        <td>
+          ctrl: <input type="checkbox" id="cancel_ctrl" />
+          alt: <input type="checkbox" id="cancel_alt" />
+        </td>
+      </tr>
+    </table>
+    <button id="save_options">save options</button>
+
+    <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="keymap.js"></script>
+    <script type="text/javascript" src="options.js"></script>
+  </body>
+</html>
