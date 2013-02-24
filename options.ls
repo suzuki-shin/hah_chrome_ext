@@ -1,12 +1,6 @@
 AVAILABLE_KEYCODES = [parseInt(k) for k, v of KEYMAP when k >= 27]
 
 restoreSettings =->
-#   d = {}
-#   try
-#     d.settings = JSON.parse(localStorage['settings'] || '{}')
-#   catch
-#     d.settings = DEFAULT_SETTINGS
-
   chrome.storage.sync('settings', ((d) ->
     hitahint_start_code   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CODE else DEFAULT_SETTINGS.START_HITAHINT.CODE
     hitahint_start_ctrl   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CTRL else DEFAULT_SETTINGS.START_HITAHINT.CTRL
@@ -50,8 +44,6 @@ saveSettings =->
       ALT:  $('#cancel_alt').is(':checked')   ? DEFAULT_SETTINGS.CANCEL.ALT
 
   console.log(settings)
-#   localStorage['settings'] = JSON.stringify(settings)
-
   chrome.storage.sync.set({'settings': settings})
 
 $(->

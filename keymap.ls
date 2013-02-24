@@ -70,7 +70,7 @@ DEFAULT_SETTINGS =
   'START_HITAHINT':            {CODE: 69,  CTRL: on,  ALT: off} # Ctrl+e
   'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
   'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
-  'CANCEL':                    {CODE: 71,  CTRL: on,  ALT: off} # Ctrl+g
+  'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off} # ESC
   'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off} # down
   'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off} # up
   'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup

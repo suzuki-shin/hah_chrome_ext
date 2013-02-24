@@ -13,16 +13,14 @@ WEB_SEARCH_LIST =
 
 KEY = DEFAULT_SETTINGS
 chrome.storage.sync.get('settings', ((d) ->
-#   if localStorage.settings then KEY <<< localStorage.settings
   console.log(d)
-#   if localStorage.settings then KEY <<< localStorage.settings
   if d.settings? then KEY <<< d.settings
   console.log(KEY)
 
   FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select'
-  # FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
+# FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
   CLICKABLES = 'a'
-  # CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
+# CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
 
   _HINT_KEYS = {65:'A', 66:'B', 67:'C', 68:'D', 69:'E', 70:'F', 71:'G', 72:'H', 73:'I', 74:'J', 75:'K', 76:'L', 77:'M', 78:'N', 79:'O', 80:'P', 81:'Q', 82:'R', 83:'S', 84:'T', 85:'U', 86:'V', 87:'W', 88:'X', 89:'Y', 90:'Z'}
   HINT_KEYS = {}
@@ -168,7 +166,6 @@ chrome.storage.sync.get('settings', ((d) ->
       case 'MOVE_NEXT_SELECTOR_CURSOR' then @@keyDownSelectorCursorNext(e)
       case 'MOVE_PREV_SELECTOR_CURSOR' then @@keyDownSelectorCursorPrev(e)
       case 'CANCEL'                    then @@keyUpCancel(e)
-  #     e.preventDefault()
       default (-> alert(e.keyCode))
 
     @keyupMap = (e) ->
@@ -182,11 +179,6 @@ chrome.storage.sync.get('settings', ((d) ->
         return
 
       @@keyUpSelectorFiltering(e)
-  #     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-  #     case 'CANCEL'          then @@keyUpCancel()
-  #     case 'TOGGLE_SELECTOR' then @@keyUpSelectorToggle()
-  #     default @@keyUpSelectorFiltering(e)
-  #     e.preventDefault()
 
     @keyUpCancel = (e) ->
       e.preventDefault()
@@ -198,7 +190,6 @@ chrome.storage.sync.get('settings', ((d) ->
       console.log('keyUpSelectorFiltering1')
       if e.keyCode < 65 or e.keyCode > 90
         return
-  #       return false
       console.log('keyUpSelectorFiltering2')
 
       # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
@@ -246,30 +237,6 @@ chrome.storage.sync.get('settings', ((d) ->
       $('#selectorInput').val('')
       false
 
-  # NeutralMode.keyUpSelectorToggle =->
-  #   Main.mode = SelectorMode
-  #   $('#selectorConsole').show()
-  #   $('#selectorInput').focus()
-
-  # class Selector
-  #   @@start =->
-  #     chrome.extension.sendMessage({mes: "makeSelectorConsole"}, ((list) ->
-  #       console.log('extension.sendMessage')
-  #       console.log(list)
-  #       Main.list = list
-  #       $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>')
-  #       makeSelectorConsole(list)
-  #     ))
-
-  #     $('body').on('submit', '#selectorForm', (e) -> SelectorMode.keyUpSelectorDecide(e))
-
-  # Selector.start()
-  #
-  #
-  #
-  #
-  #  p = prelude
-
 
   class HitAHintMode
     @keydownMap = (e) ->
@@ -286,7 +253,6 @@ chrome.storage.sync.get('settings', ((d) ->
       case 'CANCEL' then @@keyUpCancel(e)
 
       if isHitAHintKey(e.keyCode) then @@keyUpHintKey(e)
-  #     e.preventDefault()
 
     @keyupMap = (e) ->
       console.log('mode: ' + Main.mode)
@@ -297,11 +263,6 @@ chrome.storage.sync.get('settings', ((d) ->
       if e.keyCode is CTRL_KEYCODE
         Main.ctrl = off
         return
-
-  #     if isHitAHintKey(e.keyCode) then @@keyUpHintKey(e)
-  #     case 'CANCEL' then @@keyUpCancel()
-  #     default @@keyUpHintKey(e.keyCode)
-  #     e.preventDefault()
 
     @firstKeyCode = null
 
@@ -355,7 +316,6 @@ chrome.storage.sync.get('settings', ((d) ->
       case 'MOVE_PREV_FORM' then @@keyUpFormPrev(e)
       case 'CANCEL'         then @@keyUpCancel(e)
       default (-> console.log('default'))
-  #     e.preventDefault()
 
     @keyUpFormNext = (e) ->
       e.preventDefault()
@@ -381,7 +341,6 @@ chrome.storage.sync.get('settings', ((d) ->
       e.preventDefault()
       Main.mode = NeutralMode
       $(':focus').blur()
-
 
   Main.start()
 ))

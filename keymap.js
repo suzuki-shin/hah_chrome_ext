@@ -84,8 +84,8 @@ DEFAULT_SETTINGS = {
     ALT: false
   },
   'CANCEL': {
-    CODE: 71,
-    CTRL: true,
+    CODE: 27,
+    CTRL: false,
     ALT: false
   },
   'MOVE_NEXT_SELECTOR_CURSOR': {
