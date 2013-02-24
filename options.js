@@ -8,53 +8,48 @@ for (k in ref$ = KEYMAP) {
 }
 AVAILABLE_KEYCODES = res$;
 restoreSettings = function(){
-  var d, e, hitahint_start_code, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, cancel_code, cancel_ctrl, cancel_alt;
-  d = {};
-  try {
-    d.settings = JSON.parse(localStorage['settings'] || '{}');
-  } catch (e$) {
-    e = e$;
-    d.settings = DEFAULT_SETTINGS;
-  }
-  hitahint_start_code = d.settings != null && d.settings.START_HITAHINT != null
-    ? d.settings.START_HITAHINT.CODE
-    : DEFAULT_SETTINGS.START_HITAHINT.CODE;
-  hitahint_start_ctrl = d.settings != null && d.settings.START_HITAHINT != null
-    ? d.settings.START_HITAHINT.CTRL
-    : DEFAULT_SETTINGS.START_HITAHINT.CTRL;
-  hitahint_start_alt = d.settings != null && d.settings.START_HITAHINT != null
-    ? d.settings.START_HITAHINT.ALT
-    : DEFAULT_SETTINGS.START_HITAHINT.ALT;
-  tab_select_start_code = d.settings != null && d.settings.TOGGLE_SELECTOR != null
-    ? d.settings.TOGGLE_SELECTOR.CODE
-    : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE;
-  tab_select_start_ctrl = d.settings != null && d.settings.TOGGLE_SELECTOR != null
-    ? d.settings.TOGGLE_SELECTOR.CTRL
-    : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL;
-  tab_select_start_alt = d.settings != null && d.settings.TOGGLE_SELECTOR != null
-    ? d.settings.TOGGLE_SELECTOR.ALT
-    : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT;
-  cancel_code = d.settings != null && d.settings.CANCEL
-    ? d.settings.CANCEL.CODE
-    : DEFAULT_SETTINGS.CANCEL.CODE;
-  cancel_ctrl = d.settings != null && d.settings.CANCEL
-    ? d.settings.CANCEL.CTRL
-    : DEFAULT_SETTINGS.CANCEL.CTRL;
-  cancel_alt = d.settings != null && d.settings.CANCEL
-    ? d.settings.CANCEL.ALT
-    : DEFAULT_SETTINGS.CANCEL.ALT;
-  $('#hitahint_start').val(KEYMAP[hitahint_start_code]);
-  $('#hitahint_start_code').val(hitahint_start_code);
-  $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl);
-  $('#hitahint_start_alt').attr("checked", hitahint_start_alt);
-  $('#tab_select_start').val(KEYMAP[tab_select_start_code]);
-  $('#tab_select_start_code').val(tab_select_start_code);
-  $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl);
-  $('#tab_select_start_alt').attr("checked", tab_select_start_alt);
-  $('#cancel').val(KEYMAP[cancel_code]);
-  $('#cancel_code').val(cancel_code);
-  $('#cancel_ctrl').attr("checked", cancel_ctrl);
-  return $('#cancel_alt').attr("checked", cancel_alt);
+  return chrome.storage.sync('settings', function(d){
+    var hitahint_start_code, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, cancel_code, cancel_ctrl, cancel_alt;
+    hitahint_start_code = d.settings != null && d.settings.START_HITAHINT != null
+      ? d.settings.START_HITAHINT.CODE
+      : DEFAULT_SETTINGS.START_HITAHINT.CODE;
+    hitahint_start_ctrl = d.settings != null && d.settings.START_HITAHINT != null
+      ? d.settings.START_HITAHINT.CTRL
+      : DEFAULT_SETTINGS.START_HITAHINT.CTRL;
+    hitahint_start_alt = d.settings != null && d.settings.START_HITAHINT != null
+      ? d.settings.START_HITAHINT.ALT
+      : DEFAULT_SETTINGS.START_HITAHINT.ALT;
+    tab_select_start_code = d.settings != null && d.settings.TOGGLE_SELECTOR != null
+      ? d.settings.TOGGLE_SELECTOR.CODE
+      : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE;
+    tab_select_start_ctrl = d.settings != null && d.settings.TOGGLE_SELECTOR != null
+      ? d.settings.TOGGLE_SELECTOR.CTRL
+      : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL;
+    tab_select_start_alt = d.settings != null && d.settings.TOGGLE_SELECTOR != null
+      ? d.settings.TOGGLE_SELECTOR.ALT
+      : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT;
+    cancel_code = d.settings != null && d.settings.CANCEL
+      ? d.settings.CANCEL.CODE
+      : DEFAULT_SETTINGS.CANCEL.CODE;
+    cancel_ctrl = d.settings != null && d.settings.CANCEL
+      ? d.settings.CANCEL.CTRL
+      : DEFAULT_SETTINGS.CANCEL.CTRL;
+    cancel_alt = d.settings != null && d.settings.CANCEL
+      ? d.settings.CANCEL.ALT
+      : DEFAULT_SETTINGS.CANCEL.ALT;
+    $('#hitahint_start').val(KEYMAP[hitahint_start_code]);
+    $('#hitahint_start_code').val(hitahint_start_code);
+    $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl);
+    $('#hitahint_start_alt').attr("checked", hitahint_start_alt);
+    $('#tab_select_start').val(KEYMAP[tab_select_start_code]);
+    $('#tab_select_start_code').val(tab_select_start_code);
+    $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl);
+    $('#tab_select_start_alt').attr("checked", tab_select_start_alt);
+    $('#cancel').val(KEYMAP[cancel_code]);
+    $('#cancel_code').val(cancel_code);
+    $('#cancel_ctrl').attr("checked", cancel_ctrl);
+    return $('#cancel_alt').attr("checked", cancel_alt);
+  });
 };
 saveSettings = function(){
   var settings, ref$;
@@ -95,9 +90,8 @@ saveSettings = function(){
     }
   };
   console.log(settings);
-  localStorage['settings'] = JSON.stringify(settings);
   return chrome.storage.sync.set({
-    'test': 'jkjjkjk'
+    'settings': settings
   });
 };
 $(function(){
