@@ -1,7 +1,10 @@
 AVAILABLE_KEYCODES = [parseInt(k) for k, v of KEYMAP when k >= 27]
 
 restoreSettings =->
-  chrome.storage.sync('settings', ((d) ->
+  chrome.storage.sync.get('settings', ((d) ->
+    console.log('sync.get')
+    console.log(d)
+
     hitahint_start_code   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CODE else DEFAULT_SETTINGS.START_HITAHINT.CODE
     hitahint_start_ctrl   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CTRL else DEFAULT_SETTINGS.START_HITAHINT.CTRL
     hitahint_start_alt    = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.ALT  else DEFAULT_SETTINGS.START_HITAHINT.ALT

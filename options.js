@@ -8,8 +8,10 @@ for (k in ref$ = KEYMAP) {
 }
 AVAILABLE_KEYCODES = res$;
 restoreSettings = function(){
-  return chrome.storage.sync('settings', function(d){
+  return chrome.storage.sync.get('settings', function(d){
     var hitahint_start_code, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, cancel_code, cancel_ctrl, cancel_alt;
+    console.log('sync.get');
+    console.log(d);
     hitahint_start_code = d.settings != null && d.settings.START_HITAHINT != null
       ? d.settings.START_HITAHINT.CODE
       : DEFAULT_SETTINGS.START_HITAHINT.CODE;
