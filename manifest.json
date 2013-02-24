@@ -1,7 +1,7 @@
 {
     "name": "hah",
     "description" : "hit a hint and tab switcher",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -9,25 +9,26 @@
             "js": [
                 "jquery-1.9.0.min.js",
                 "prelude.min.js",
-				"keymap.js",
-                "content_script_common.js",
-                "content_script_selector.js"
+                "keymap.js",
+				"content_script.js"
+//                 "content_script_common.js",
+//                 "content_script_selector.js"
             ],
             "all_frames": false
-        },
-        {
-            "matches": ["<all_urls>"],
-            "exclude_matches": [
-            ],
-            "js": ["content_script_hitahint.js"],
-            "all_frames": false
+//         },
+//         {
+//             "matches": ["<all_urls>"],
+//             "exclude_matches": [
+//             ],
+//             "js": ["content_script_hitahint.js"],
+//             "all_frames": false
         }
     ],
     "background": {
         "page": "background.html",
         "persistent": false
     },
-	"options_page": "options.html",
-    "permissions": [ "history", "tabs", "bookmarks" ],
+    "options_page": "options.html",
+    "permissions": [ "history", "tabs", "bookmarks", "storage" ],
     "manifest_version": 2
 }
