@@ -1,4 +1,4 @@
-var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, SELECTOR_NUM, WEB_SEARCH_LIST, KEY;
+var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, SELECTOR_NUM, WEB_SEARCH_LIST, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, makeSelectorConsole;
 p = prelude;
 CTRL_KEYCODE = 17;
 ALT_KEYCODE = 18;
@@ -21,92 +21,109 @@ WEB_SEARCH_LIST = [
     type: 'websearch'
   }
 ];
-KEY = DEFAULT_SETTINGS;
+FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select';
+CLICKABLES = 'a';
+_HINT_KEYS = {
+  65: 'A',
+  66: 'B',
+  67: 'C',
+  68: 'D',
+  69: 'E',
+  70: 'F',
+  71: 'G',
+  72: 'H',
+  73: 'I',
+  74: 'J',
+  75: 'K',
+  76: 'L',
+  77: 'M',
+  78: 'N',
+  79: 'O',
+  80: 'P',
+  81: 'Q',
+  82: 'R',
+  83: 'S',
+  84: 'T',
+  85: 'U',
+  86: 'V',
+  87: 'W',
+  88: 'X',
+  89: 'Y',
+  90: 'Z'
+};
+HINT_KEYS = {};
+for (k1 in _HINT_KEYS) {
+  v1 = _HINT_KEYS[k1];
+  for (k2 in _HINT_KEYS) {
+    v2 = _HINT_KEYS[k2];
+    HINT_KEYS[parseInt(k1) * 100 + parseInt(k2)] = v1 + v2;
+  }
+}
+keyCodeToIndex = function(firstKeyCode, secondKeyCode){
+  var k, v;
+  return $.inArray(parseInt(firstKeyCode) * 100 + parseInt(secondKeyCode), (function(){
+    var ref$, results$ = [];
+    for (k in ref$ = HINT_KEYS) {
+      v = ref$[k];
+      results$.push(parseInt(k));
+    }
+    return results$;
+  }()));
+};
+indexToKeyCode = function(index){
+  var k, v;
+  return (function(){
+    var ref$, results$ = [];
+    for (k in ref$ = HINT_KEYS) {
+      v = ref$[k];
+      results$.push(k);
+    }
+    return results$;
+  }())[index];
+};
+isHitAHintKey = function(keyCode){
+  var k, v;
+  return $.inArray(String(keyCode), (function(){
+    var ref$, results$ = [];
+    for (k in ref$ = _HINT_KEYS) {
+      v = ref$[k];
+      results$.push(k);
+    }
+    return results$;
+  }())) !== -1;
+};
+isFocusingForm = function(){
+  var focusElems;
+  console.log('isFocusingForm');
+  focusElems = $(':focus');
+  console.log(focusElems.attr('type'));
+  return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
+};
+makeSelectorConsole = function(list){
+  var ts, t;
+  if ($('#selectorList')) {
+    $('#selectorList').remove();
+  }
+  console.log(list);
+  ts = p.concat(p.take(SELECTOR_NUM, (function(){
+    var i$, ref$, len$, results$ = [];
+    for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
+      t = ref$[i$];
+      results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>');
+    }
+    return results$;
+  }())));
+  $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
+  return $('#selectorList tr:first').addClass("selected");
+};
 chrome.storage.sync.get('settings', function(d){
-  var FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, keyMapper, makeSelectorConsole, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
+  var KEY, keyMapper, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
   console.log(d);
+  KEY = DEFAULT_SETTINGS;
   if (d.settings != null) {
     import$(KEY, d.settings);
   }
   console.log(KEY);
-  FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select';
-  CLICKABLES = 'a';
-  _HINT_KEYS = {
-    65: 'A',
-    66: 'B',
-    67: 'C',
-    68: 'D',
-    69: 'E',
-    70: 'F',
-    71: 'G',
-    72: 'H',
-    73: 'I',
-    74: 'J',
-    75: 'K',
-    76: 'L',
-    77: 'M',
-    78: 'N',
-    79: 'O',
-    80: 'P',
-    81: 'Q',
-    82: 'R',
-    83: 'S',
-    84: 'T',
-    85: 'U',
-    86: 'V',
-    87: 'W',
-    88: 'X',
-    89: 'Y',
-    90: 'Z'
-  };
-  HINT_KEYS = {};
-  for (k1 in _HINT_KEYS) {
-    v1 = _HINT_KEYS[k1];
-    for (k2 in _HINT_KEYS) {
-      v2 = _HINT_KEYS[k2];
-      HINT_KEYS[parseInt(k1) * 100 + parseInt(k2)] = v1 + v2;
-    }
-  }
-  keyCodeToIndex = function(firstKeyCode, secondKeyCode){
-    var k, v;
-    return $.inArray(parseInt(firstKeyCode) * 100 + parseInt(secondKeyCode), (function(){
-      var ref$, results$ = [];
-      for (k in ref$ = HINT_KEYS) {
-        v = ref$[k];
-        results$.push(parseInt(k));
-      }
-      return results$;
-    }()));
-  };
-  indexToKeyCode = function(index){
-    var k, v;
-    return (function(){
-      var ref$, results$ = [];
-      for (k in ref$ = HINT_KEYS) {
-        v = ref$[k];
-        results$.push(k);
-      }
-      return results$;
-    }())[index];
-  };
-  isHitAHintKey = function(keyCode){
-    var k, v;
-    return $.inArray(String(keyCode), (function(){
-      var ref$, results$ = [];
-      for (k in ref$ = _HINT_KEYS) {
-        v = ref$[k];
-        results$.push(k);
-      }
-      return results$;
-    }())) !== -1;
-  };
-  isFocusingForm = function(){
-    var focusElems;
-    console.log('isFocusingForm');
-    focusElems = $(':focus');
-    console.log(focusElems.attr('type'));
-    return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
-  };
   keyMapper = function(keyCode, ctrl, alt){
     var k, v;
     return p.first((function(){
@@ -119,23 +136,6 @@ chrome.storage.sync.get('settings', function(d){
       }
       return results$;
     }()));
-  };
-  makeSelectorConsole = function(list){
-    var ts, t;
-    if ($('#selectorList')) {
-      $('#selectorList').remove();
-    }
-    console.log(list);
-    ts = p.concat(p.take(SELECTOR_NUM, (function(){
-      var i$, ref$, len$, results$ = [];
-      for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
-        t = ref$[i$];
-        results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>');
-      }
-      return results$;
-    }())));
-    $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
-    return $('#selectorList tr:first').addClass("selected");
   };
   Main = (function(){
     Main.displayName = 'Main';
@@ -161,11 +161,11 @@ chrome.storage.sync.get('settings', function(d){
       }
       switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
       case 'START_HITAHINT':
-        return constructor.keyUpHitAHintStart();
+        return constructor.startHah();
       case 'FOCUS_FORM':
-        return constructor.keyUpFocusForm();
+        return constructor.focusForm();
       case 'TOGGLE_SELECTOR':
-        return constructor.keyUpSelectorToggle();
+        return constructor.toggleSelector();
       default:
         return function(){
           return console.log('default');
@@ -185,20 +185,20 @@ chrome.storage.sync.get('settings', function(d){
         Main.ctrl = false;
       }
     };
-    NeutralMode.keyUpHistoryBack = function(){
+    constructor.backHistory = function(){
       return history.back();
     };
-    constructor.keyUpSelectorToggle = function(){
+    constructor.toggleSelector = function(){
       Main.mode = SelectorMode;
       $('#selectorConsole').show();
       return $('#selectorInput').focus();
     };
-    constructor.keyUpFocusForm = function(){
+    constructor.focusForm = function(){
       Main.mode = FormFocusMode;
       Main.formInputFieldIndex = 0;
       return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
     };
-    constructor.keyUpHitAHintStart = function(){
+    constructor.startHah = function(){
       Main.mode = HitAHintMode;
       return $(CLICKABLES).addClass('links').html(function(i, oldHtml){
         if (HINT_KEYS[indexToKeyCode(i)] != null) {
@@ -231,7 +231,7 @@ chrome.storage.sync.get('settings', function(d){
       return makeSelectorConsole(list);
     });
     $('body').on('submit', '#selectorForm', function(e){
-      return SelectorMode.keyUpSelectorDecide(e);
+      return SelectorMode.decideSelector(e);
     });
     if (isFocusingForm()) {
       Main.mode = FormFocusMode;
@@ -263,11 +263,11 @@ chrome.storage.sync.get('settings', function(d){
       }
       switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
       case 'MOVE_NEXT_SELECTOR_CURSOR':
-        return constructor.keyDownSelectorCursorNext(e);
+        return constructor.moveNextCursor(e);
       case 'MOVE_PREV_SELECTOR_CURSOR':
-        return constructor.keyDownSelectorCursorPrev(e);
+        return constructor.movePrevCursor(e);
       case 'CANCEL':
-        return constructor.keyUpCancel(e);
+        return constructor.cancel(e);
       default:
         return function(){
           return alert(e.keyCode);
@@ -287,21 +287,21 @@ chrome.storage.sync.get('settings', function(d){
         Main.ctrl = false;
         return;
       }
-      return constructor.keyUpSelectorFiltering(e);
+      return constructor.filterSelector(e);
     };
-    SelectorMode.keyUpCancel = function(e){
+    constructor.cancel = function(e){
       e.preventDefault();
       Main.mode = NeutralMode;
       $('#selectorConsole').hide();
       return $(':focus').blur();
     };
-    SelectorMode.keyUpSelectorFiltering = function(e){
+    SelectorMode.filterSelector = function(e){
       var filtering, text;
-      console.log('keyUpSelectorFiltering1');
+      console.log('filterSelector1');
       if (e.keyCode < 65 || e.keyCode > 90) {
         return;
       }
-      console.log('keyUpSelectorFiltering2');
+      console.log('filterSelector2');
       filtering = function(text, list){
         var matchP;
         matchP = function(elem, queries){
@@ -319,37 +319,36 @@ chrome.storage.sync.get('settings', function(d){
           return matchP(t, text.toLowerCase().split(' '));
         }, list);
       };
-      console.log('keyUpSelectorFiltering');
+      console.log('filterSelector');
       text = $('#selectorInput').val();
       makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST));
       return $('#selectorConsole').show();
     };
-    SelectorMode.keyUpSelectorToggle = function(e){
+    constructor.toggleSelector = function(e){
       e.preventDefault();
       Main.mode = NeutralMode;
       return $('#selectorConsole').hide();
     };
-    SelectorMode.keyDownSelectorCursorNext = function(e){
+    constructor.moveNextCursor = function(e){
       e.preventDefault();
-      console.log('keyDownSelectorCursorNext');
+      console.log('moveNextCursor');
       return $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
     };
-    SelectorMode.keyDownSelectorCursorPrev = function(e){
+    constructor.movePrevCursor = function(e){
       e.preventDefault();
-      console.log('keyDownSelectorCursorPrev');
+      console.log('movePrevCursor');
       return $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
     };
-    SelectorMode.keyUpSelectorDecide = function(e){
+    constructor.decideSelector = function(e){
       var ref$, type, id, url, query;
-      console.log('keyUpSelectorDecide');
       e.preventDefault();
-      console.log('keyUpSelectorDecide');
+      console.log('decideSelector');
       ref$ = $('#selectorList tr.selected').attr('id').split('-'), type = ref$[0], id = ref$[1];
       url = $('#selectorList tr.selected span.url').text();
       query = $('#selectorInput').val();
-      constructor.keyUpCancel(e);
+      constructor.cancel(e);
       chrome.extension.sendMessage({
-        mes: "keyUpSelectorDecide",
+        mes: "decideSelector",
         item: {
           id: id,
           url: url,
@@ -357,7 +356,8 @@ chrome.storage.sync.get('settings', function(d){
           query: query
         }
       }, function(list){
-        return Main.list = list;
+        Main.list = list;
+        return makeSelectorConsole(list);
       });
       $('#selectorInput').val('');
       return false;
@@ -383,10 +383,11 @@ chrome.storage.sync.get('settings', function(d){
       }
       switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
       case 'CANCEL':
-        constructor.keyUpCancel(e);
-      }
-      if (isHitAHintKey(e.keyCode)) {
-        return constructor.keyUpHintKey(e);
+        return constructor.cancel(e);
+      default:
+        if (isHitAHintKey(e.keyCode)) {
+          return constructor.hitHitKey(e);
+        }
       }
     };
     HitAHintMode.keyupMap = function(e){
@@ -403,14 +404,14 @@ chrome.storage.sync.get('settings', function(d){
       }
     };
     HitAHintMode.firstKeyCode = null;
-    HitAHintMode.keyUpCancel = function(e){
+    constructor.cancel = function(e){
       constructor.firstKeyCode = null;
       e.preventDefault();
       Main.mode = NeutralMode;
       $(CLICKABLES).removeClass('links');
       return $('.hintKey').remove();
     };
-    HitAHintMode.keyUpHintKey = function(e){
+    constructor.hitHitKey = function(e){
       var idx;
       e.preventDefault();
       console.log('hit!: ' + e.keyCode + ', 1stkey: ' + this.firstKeyCode);
@@ -419,11 +420,16 @@ chrome.storage.sync.get('settings', function(d){
       } else {
         idx = keyCodeToIndex(this.firstKeyCode, e.keyCode);
         console.log('idx: ' + idx);
-        $(CLICKABLES)[idx].click();
-        Main.mode = NeutralMode;
-        $(CLICKABLES).removeClass('links');
-        $('.hintKey').remove();
-        return this.firstKeyCode = null;
+        try {
+          $(CLICKABLES)[idx].click();
+          Main.mode = NeutralMode;
+          $(CLICKABLES).removeClass('links');
+          $('.hintKey').remove();
+          return this.firstKeyCode = null;
+        } catch (e$) {
+          e = e$;
+          return this.firstKeyCode = e.keyCode;
+        }
       }
     };
     function HitAHintMode(){}
@@ -462,20 +468,20 @@ chrome.storage.sync.get('settings', function(d){
       }
       switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
       case 'MOVE_NEXT_FORM':
-        return constructor.keyUpFormNext(e);
+        return constructor.focusNextForm(e);
       case 'MOVE_PREV_FORM':
-        return constructor.keyUpFormPrev(e);
+        return constructor.focusPrevForm(e);
       case 'CANCEL':
-        return constructor.keyUpCancel(e);
+        return constructor.cancel(e);
       default:
         return function(){
           return console.log('default');
         };
       }
     };
-    FormFocusMode.keyUpFormNext = function(e){
+    FormFocusMode.focusNextForm = function(e){
       e.preventDefault();
-      console.log('keyUpFormNext');
+      console.log('focusNextForm');
       Main.formInputFieldIndex += 1;
       console.log(Main.formInputFieldIndex);
       console.log($(FORM_INPUT_FIELDS));
@@ -484,9 +490,9 @@ chrome.storage.sync.get('settings', function(d){
         return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
       }
     };
-    FormFocusMode.keyUpFormPrev = function(e){
+    FormFocusMode.focusPrevForm = function(e){
       e.preventDefault();
-      console.log('keyUpFormPrev');
+      console.log('focusPrevForm');
       Main.formInputFieldIndex -= 1;
       console.log(Main.formInputFieldIndex);
       console.log($(FORM_INPUT_FIELDS));
@@ -495,7 +501,7 @@ chrome.storage.sync.get('settings', function(d){
         return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
       }
     };
-    FormFocusMode.keyUpCancel = function(e){
+    constructor.cancel = function(e){
       e.preventDefault();
       Main.mode = NeutralMode;
       return $(':focus').blur();

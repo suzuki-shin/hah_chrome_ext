@@ -10,63 +10,62 @@ WEB_SEARCH_LIST =
   {title: 'google検索', url: 'https://www.google.co.jp/#hl=ja&q=', type: 'websearch'}
   {title: 'alc辞書', url: 'http://eow.alc.co.jp/search?ref=sa&q=', type: 'websearch'}
 
+FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select'
+# FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
+CLICKABLES = 'a'
+# CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
 
-KEY = DEFAULT_SETTINGS
+_HINT_KEYS = {65:'A', 66:'B', 67:'C', 68:'D', 69:'E', 70:'F', 71:'G', 72:'H', 73:'I', 74:'J', 75:'K', 76:'L', 77:'M', 78:'N', 79:'O', 80:'P', 81:'Q', 82:'R', 83:'S', 84:'T', 85:'U', 86:'V', 87:'W', 88:'X', 89:'Y', 90:'Z'}
+HINT_KEYS = {}
+for k1, v1 of _HINT_KEYS
+  for k2, v2 of _HINT_KEYS
+    HINT_KEYS[parseInt(k1) * 100 + parseInt(k2)] = v1 + v2
+
+# 打ったHintKeyの一打目と二打目のキーコードをうけとり、それに対応するクリック要素のインデックスを返す
+# keyCodeToIndex :: Int -> Int -> Int
+keyCodeToIndex = (firstKeyCode, secondKeyCode) ->
+  $.inArray(parseInt(firstKeyCode) * 100 + parseInt(secondKeyCode), [parseInt(k) for k,v of HINT_KEYS])
+
+# インデックスを受取り、HintKeyのリストの中から対応するキーコードを返す
+# indexToKeyCode :: Int -> String
+indexToKeyCode = (index) -> [k for k,v of HINT_KEYS][index]
+
+# キーコードを受取り、それがHintKeyかどうかを返す
+# isHitAHintKey :: Int -> Bool
+isHitAHintKey = (keyCode) ->
+  $.inArray(String(keyCode), [k for k,v of _HINT_KEYS]) isnt -1
+
+# 現在フォーカスがある要素がtextタイプのinputかtextareaである(文字入力可能なformの要素)かどうかを返す
+# isFocusingForm :: Bool
+isFocusingForm =->
+  console.log('isFocusingForm')
+  focusElems = $(':focus')
+  console.log(focusElems.attr('type'))
+  focusElems[0] and (
+    (focusElems[0].nodeName.toLowerCase() == "input" and focusElems.attr('type') == "text") or
+    focusElems[0].nodeName.toLowerCase() == "textarea"
+  )
+
+# (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
+# makeSelectorConsole :: [{title, url, type}] -> IO Jquery
+makeSelectorConsole = (list) ->
+  if $('#selectorList') then $('#selectorList').remove()
+  console.log(list)
+  ts = p.concat(
+    p.take(SELECTOR_NUM,
+           ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
+  $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
+  $('#selectorList tr:first').addClass("selected")
+
+
 chrome.storage.sync.get('settings', ((d) ->
   console.log(d)
+  KEY = DEFAULT_SETTINGS
   if d.settings? then KEY <<< d.settings
   console.log(KEY)
 
-  FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select'
-# FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
-  CLICKABLES = 'a'
-# CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button"
-
-  _HINT_KEYS = {65:'A', 66:'B', 67:'C', 68:'D', 69:'E', 70:'F', 71:'G', 72:'H', 73:'I', 74:'J', 75:'K', 76:'L', 77:'M', 78:'N', 79:'O', 80:'P', 81:'Q', 82:'R', 83:'S', 84:'T', 85:'U', 86:'V', 87:'W', 88:'X', 89:'Y', 90:'Z'}
-  HINT_KEYS = {}
-  for k1, v1 of _HINT_KEYS
-    for k2, v2 of _HINT_KEYS
-      HINT_KEYS[parseInt(k1) * 100 + parseInt(k2)] = v1 + v2
-
-  # 打ったHintKeyの一打目と二打目のキーコードをうけとり、それに対応するクリック要素のインデックスを返す
-  # keyCodeToIndex :: Int -> Int -> Int
-  keyCodeToIndex = (firstKeyCode, secondKeyCode) ->
-    $.inArray(parseInt(firstKeyCode) * 100 + parseInt(secondKeyCode), [parseInt(k) for k,v of HINT_KEYS])
-
-  # インデックスを受取り、HintKeyのリストの中から対応するキーコードを返す
-  # indexToKeyCode :: Int -> String
-  indexToKeyCode = (index) -> [k for k,v of HINT_KEYS][index]
-
-  # キーコードを受取り、それがHintKeyかどうかを返す
-  # isHitAHintKey :: Int -> Bool
-  isHitAHintKey = (keyCode) ->
-    $.inArray(String(keyCode), [k for k,v of _HINT_KEYS]) isnt -1
-
-  # 現在フォーカスがある要素がtextタイプのinputかtextareaである(文字入力可能なformの要素)かどうかを返す
-  # isFocusingForm :: Bool
-  isFocusingForm =->
-    console.log('isFocusingForm')
-    focusElems = $(':focus')
-    console.log(focusElems.attr('type'))
-    focusElems[0] and (
-      (focusElems[0].nodeName.toLowerCase() == "input" and focusElems.attr('type') == "text") or
-      focusElems[0].nodeName.toLowerCase() == "textarea"
-    )
-
   keyMapper = (keyCode, ctrl, alt) ->
     p.first([k for k, v of KEY when v.CODE == keyCode and v.CTRL == ctrl and v.ALT == alt])
-
-
-  # (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
-  # makeSelectorConsole :: [{title, url, type}] -> IO Jquery
-  makeSelectorConsole = (list) ->
-    if $('#selectorList') then $('#selectorList').remove()
-    console.log(list)
-    ts = p.concat(
-      p.take(SELECTOR_NUM,
-             ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
-    $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
-    $('#selectorList tr:first').addClass("selected")
 
 
   class Main
@@ -84,10 +83,10 @@ chrome.storage.sync.get('settings', ((d) ->
         return
 
       switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'START_HITAHINT'  then @@keyUpHitAHintStart()
-      case 'FOCUS_FORM'      then @@keyUpFocusForm()
-      case 'TOGGLE_SELECTOR' then @@keyUpSelectorToggle()
-  #     case KEY_CODE.BACK_HISTORY    then @@keyUpHistoryBack()
+      case 'START_HITAHINT'  then @@startHah()
+      case 'FOCUS_FORM'      then @@focusForm()
+      case 'TOGGLE_SELECTOR' then @@toggleSelector()
+  #     case KEY_CODE.BACK_HISTORY    then @@backHistory()
       default (-> console.log('default'))
   #     e.preventDefault()
 
@@ -101,20 +100,20 @@ chrome.storage.sync.get('settings', ((d) ->
         Main.ctrl = off
         return
 
-    @keyUpHistoryBack =->
+    @@backHistory =->
       history.back()
 
-    @@keyUpSelectorToggle =->
+    @@toggleSelector =->
       Main.mode = SelectorMode
       $('#selectorConsole').show()
       $('#selectorInput').focus()
 
-    @@keyUpFocusForm =->
+    @@focusForm =->
       Main.mode = FormFocusMode
       Main.formInputFieldIndex = 0
       $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
 
-    @@keyUpHitAHintStart =->
+    @@startHah =->
       Main.mode = HitAHintMode
       $(CLICKABLES).addClass('links').html((i, oldHtml) ->
         if HINT_KEYS[indexToKeyCode(i)]?
@@ -138,7 +137,7 @@ chrome.storage.sync.get('settings', ((d) ->
       makeSelectorConsole(list)
     ))
 
-    $('body').on('submit', '#selectorForm', (e) -> SelectorMode.keyUpSelectorDecide(e))
+    $('body').on('submit', '#selectorForm', (e) -> SelectorMode.decideSelector(e))
 
     if isFocusingForm() then Main.mode = FormFocusMode
 
@@ -163,9 +162,9 @@ chrome.storage.sync.get('settings', ((d) ->
         return
 
       switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'MOVE_NEXT_SELECTOR_CURSOR' then @@keyDownSelectorCursorNext(e)
-      case 'MOVE_PREV_SELECTOR_CURSOR' then @@keyDownSelectorCursorPrev(e)
-      case 'CANCEL'                    then @@keyUpCancel(e)
+      case 'MOVE_NEXT_SELECTOR_CURSOR' then @@moveNextCursor(e)
+      case 'MOVE_PREV_SELECTOR_CURSOR' then @@movePrevCursor(e)
+      case 'CANCEL'                    then @@cancel(e)
       default (-> alert(e.keyCode))
 
     @keyupMap = (e) ->
@@ -178,19 +177,19 @@ chrome.storage.sync.get('settings', ((d) ->
         Main.ctrl = off
         return
 
-      @@keyUpSelectorFiltering(e)
+      @@filterSelector(e)
 
-    @keyUpCancel = (e) ->
+    @@cancel = (e) ->
       e.preventDefault()
       Main.mode = NeutralMode
       $('#selectorConsole').hide()
       $(':focus').blur()
 
-    @keyUpSelectorFiltering = (e) ->
-      console.log('keyUpSelectorFiltering1')
+    @filterSelector = (e) ->
+      console.log('filterSelector1')
       if e.keyCode < 65 or e.keyCode > 90
         return
-      console.log('keyUpSelectorFiltering2')
+      console.log('filterSelector2')
 
       # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
       # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
@@ -203,37 +202,39 @@ chrome.storage.sync.get('settings', ((d) ->
                        ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
         p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
 
-      console.log('keyUpSelectorFiltering')
+      console.log('filterSelector')
       text = $('#selectorInput').val()
       makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
       $('#selectorConsole').show()
 
-    @keyUpSelectorToggle = (e) ->
+    @@toggleSelector = (e) ->
       e.preventDefault()
       Main.mode = NeutralMode
       $('#selectorConsole').hide()
 
-    @keyDownSelectorCursorNext = (e) ->
+    @@moveNextCursor = (e) ->
       e.preventDefault()
-      console.log('keyDownSelectorCursorNext')
+      console.log('moveNextCursor')
       $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
 
-    @keyDownSelectorCursorPrev = (e) ->
+    @@movePrevCursor = (e) ->
       e.preventDefault()
-      console.log('keyDownSelectorCursorPrev')
+      console.log('movePrevCursor')
       $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
 
-    @keyUpSelectorDecide = (e) ->
-      console.log('keyUpSelectorDecide')
+    @@decideSelector = (e) ->
       e.preventDefault()
-      console.log('keyUpSelectorDecide')
+      console.log('decideSelector')
       [type, id] = $('#selectorList tr.selected').attr('id').split('-')
       url = $('#selectorList tr.selected span.url').text()
       query = $('#selectorInput').val()
-      @@keyUpCancel(e)
+      @@cancel(e)
       chrome.extension.sendMessage(
-        {mes: "keyUpSelectorDecide", item:{id: id, url: url, type: type, query: query}},
-        ((list) -> Main.list = list))
+        {mes: "decideSelector", item:{id: id, url: url, type: type, query: query}},
+        ((list) ->
+          Main.list = list
+          makeSelectorConsole(list)
+        ))
       $('#selectorInput').val('')
       false
 
@@ -250,9 +251,9 @@ chrome.storage.sync.get('settings', ((d) ->
         return
 
       switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'CANCEL' then @@keyUpCancel(e)
-
-      if isHitAHintKey(e.keyCode) then @@keyUpHintKey(e)
+      case 'CANCEL' then @@cancel(e)
+      default
+        if isHitAHintKey(e.keyCode) then @@hitHitKey(e)
 
     @keyupMap = (e) ->
       console.log('mode: ' + Main.mode)
@@ -266,14 +267,14 @@ chrome.storage.sync.get('settings', ((d) ->
 
     @firstKeyCode = null
 
-    @keyUpCancel = (e) ->
+    @@cancel = (e) ->
       @@firstKeyCode = null
       e.preventDefault()
       Main.mode = NeutralMode
       $(CLICKABLES).removeClass('links')
       $('.hintKey').remove()
 
-    @keyUpHintKey = (e) ->
+    @@hitHitKey = (e) ->
       e.preventDefault()
       console.log('hit!: ' + e.keyCode + ', 1stkey: ' + @firstKeyCode)
 
@@ -282,11 +283,14 @@ chrome.storage.sync.get('settings', ((d) ->
       else
         idx = keyCodeToIndex(@firstKeyCode,  e.keyCode)
         console.log('idx: ' + idx)
-        $(CLICKABLES)[idx].click()
-        Main.mode = NeutralMode
-        $(CLICKABLES).removeClass('links')
-        $('.hintKey').remove()
-        @firstKeyCode = null
+        try
+          $(CLICKABLES)[idx].click()
+          Main.mode = NeutralMode
+          $(CLICKABLES).removeClass('links')
+          $('.hintKey').remove()
+          @firstKeyCode = null
+        catch
+          @firstKeyCode = e.keyCode
 
 
   class FormFocusMode
@@ -312,14 +316,14 @@ chrome.storage.sync.get('settings', ((d) ->
         return
 
       switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'MOVE_NEXT_FORM' then @@keyUpFormNext(e)
-      case 'MOVE_PREV_FORM' then @@keyUpFormPrev(e)
-      case 'CANCEL'         then @@keyUpCancel(e)
+      case 'MOVE_NEXT_FORM' then @@focusNextForm(e)
+      case 'MOVE_PREV_FORM' then @@focusPrevForm(e)
+      case 'CANCEL'         then @@cancel(e)
       default (-> console.log('default'))
 
-    @keyUpFormNext = (e) ->
+    @focusNextForm = (e) ->
       e.preventDefault()
-      console.log('keyUpFormNext')
+      console.log('focusNextForm')
       Main.formInputFieldIndex += 1
       console.log(Main.formInputFieldIndex)
       console.log($(FORM_INPUT_FIELDS))
@@ -327,9 +331,9 @@ chrome.storage.sync.get('settings', ((d) ->
       if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
         $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
 
-    @keyUpFormPrev = (e) ->
+    @focusPrevForm = (e) ->
       e.preventDefault()
-      console.log('keyUpFormPrev')
+      console.log('focusPrevForm')
       Main.formInputFieldIndex -= 1
       console.log(Main.formInputFieldIndex)
       console.log($(FORM_INPUT_FIELDS))
@@ -337,7 +341,7 @@ chrome.storage.sync.get('settings', ((d) ->
       if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
         $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
 
-    @keyUpCancel = (e) ->
+    @@cancel = (e) ->
       e.preventDefault()
       Main.mode = NeutralMode
       $(':focus').blur()

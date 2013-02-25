@@ -32,7 +32,7 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
   console.log(msg)
   if msg.mes == "makeSelectorConsole"
     select(sendResponse)
-  else if msg.mes == "keyUpSelectorDecide"
+  else if msg.mes == "decideSelector"
     console.log(msg)
     switch msg.item.type
     case "tab"
