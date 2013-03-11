@@ -330,14 +330,22 @@ chrome.storage.sync.get('settings', function(d){
       return $('#selectorConsole').hide();
     };
     constructor.moveNextCursor = function(e){
+      var x;
       e.preventDefault();
       console.log('moveNextCursor');
-      return $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
+      x = $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected");
+      if (x.length === 0) {
+        return $('#selectorList tr').first().addClass("selected");
+      }
     };
     constructor.movePrevCursor = function(e){
+      var x;
       e.preventDefault();
       console.log('movePrevCursor');
-      return $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
+      x = $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected");
+      if (x.length === 0) {
+        return $('#selectorList tr').last().addClass("selected");
+      }
     };
     constructor.decideSelector = function(e){
       var ref$, type, id, url, query;

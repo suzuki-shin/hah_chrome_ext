@@ -215,12 +215,14 @@ chrome.storage.sync.get('settings', ((d) ->
     @@moveNextCursor = (e) ->
       e.preventDefault()
       console.log('moveNextCursor')
-      $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
+      x = $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
+      if x.length is 0 then $('#selectorList tr').first().addClass("selected")
 
     @@movePrevCursor = (e) ->
       e.preventDefault()
       console.log('movePrevCursor')
-      $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
+      x = $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
+      if x.length is 0 then $('#selectorList tr').last().addClass("selected")
 
     @@decideSelector = (e) ->
       e.preventDefault()
