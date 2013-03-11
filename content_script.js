@@ -298,7 +298,7 @@ chrome.storage.sync.get('settings', function(d){
     SelectorMode.filterSelector = function(e){
       var filtering, text;
       console.log('filterSelector1');
-      if (e.keyCode < 65 || e.keyCode > 90) {
+      if (e.keyCode < 48 || e.keyCode > 90) {
         return;
       }
       console.log('filterSelector2');

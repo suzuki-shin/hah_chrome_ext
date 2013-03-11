@@ -187,7 +187,7 @@ chrome.storage.sync.get('settings', ((d) ->
 
     @filterSelector = (e) ->
       console.log('filterSelector1')
-      if e.keyCode < 65 or e.keyCode > 90
+      if e.keyCode < 48 or e.keyCode > 90
         return
       console.log('filterSelector2')
 
