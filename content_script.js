@@ -157,6 +157,8 @@ chrome.storage.sync.get('settings', function(d){
         return constructor.focusForm(e);
       case 'TOGGLE_SELECTOR':
         return constructor.toggleSelector();
+      case 'CANCEL':
+        return constructor.cancel(e);
       default:
         return function(){
           return console.log('default');
@@ -199,6 +201,15 @@ chrome.storage.sync.get('settings', function(d){
           return oldHtml;
         }
       });
+    };
+    constructor.cancel = function(e){
+      e.preventDefault();
+      Main.mode = NeutralMode;
+      $('#selectorConsole').hide();
+      $(':focus').blur();
+      HitAHintMode.firstKeyCode = null;
+      $(CLICKABLES).removeClass('links');
+      return $('.hintKey').remove();
     };
     function NeutralMode(){}
     return NeutralMode;

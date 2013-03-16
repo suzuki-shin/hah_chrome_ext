@@ -87,6 +87,7 @@ chrome.storage.sync.get('settings', ((d) ->
       case 'START_HITAHINT'  then @@startHah()
       case 'FOCUS_FORM'      then @@focusForm(e)
       case 'TOGGLE_SELECTOR' then @@toggleSelector()
+      case 'CANCEL'          then @@cancel(e)
   #     case KEY_CODE.BACK_HISTORY    then @@backHistory()
       default (-> console.log('default'))
   #     e.preventDefault()
@@ -122,6 +123,14 @@ chrome.storage.sync.get('settings', ((d) ->
         then '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml
         else oldHtml)
 
+    @@cancel = (e) ->
+      e.preventDefault()
+      Main.mode = NeutralMode
+      $('#selectorConsole').hide()
+      $(':focus').blur()
+      HitAHintMode.firstKeyCode = null
+      $(CLICKABLES).removeClass('links')
+      $('.hintKey').remove()
 
   Main.start =->
     Main.ctrl = off
