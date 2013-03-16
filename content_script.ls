@@ -4,7 +4,7 @@ CTRL_KEYCODE = 17
 ALT_KEYCODE = 18
 
 ITEM_TYPE_OF = {tab: 'TAB', history: 'HIS', bookmark: 'BKM', websearch: 'WEB', command: 'COM'}
-SELECTOR_NUM = 20
+DEFAULT_SELECTOR_NUM = 20
 
 WEB_SEARCH_LIST =
   {title: 'google検索', url: 'https://www.google.co.jp/#hl=ja&q=', type: 'websearch'}
@@ -46,26 +46,48 @@ isFocusingForm =->
     focusElems[0].nodeName.toLowerCase() == "textarea"
   )
 
-# (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
-# makeSelectorConsole :: [{title, url, type}] -> IO Jquery
-makeSelectorConsole = (list) ->
-  if $('#selectorList') then $('#selectorList').remove()
-  console.log(list)
-  ts = p.concat(
-    p.take(SELECTOR_NUM,
-           ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
-  $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
-  $('#selectorList tr:first').addClass("selected")
+# chrome.storage.sync.get('selector_settings', ((d) ->
+#   console.log(d)
+#   selector_num = d?.selector_settings?.num ? DEFAULT_SELECTOR_NUM
+#   console.log(selector_num)
 
+#   # (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
+#   # makeSelectorConsole :: [{title, url, type}] -> IO Jquery
+#   makeSelectorConsole = (list) ->
+#     if $('#selectorList') then $('#selectorList').remove()
+#     console.log(list)
+#     ts = p.concat(
+#       p.take(selector_num,
+#              ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
+#     $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
+#     $('#selectorList tr:first').addClass("selected")
+# ))
 
 chrome.storage.sync.get('settings', ((d) ->
   console.log(d)
   KEY = DEFAULT_SETTINGS
-  if d.settings? then KEY <<< d.settings
+  if d.settings.key? then KEY <<< d.settings.key
   console.log(KEY)
 
   keyMapper = (keyCode, ctrl, alt) ->
     p.first([k for k, v of KEY when v.CODE == keyCode and v.CTRL == ctrl and v.ALT == alt])
+
+
+  selector_num = d.settings?.selector?.NUM ? DEFAULT_SELECTOR_NUM
+  console.log(selector_num)
+
+  # (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
+  # makeSelectorConsole :: [{title, url, type}] -> IO Jquery
+  makeSelectorConsole = (list) ->
+    if $('#selectorList') then $('#selectorList').remove()
+    console.log(list)
+    ts = p.concat(
+      p.take(selector_num,
+             ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
+    $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
+    $('#selectorList tr:first').addClass("selected")
+
+
 
 
   class Main

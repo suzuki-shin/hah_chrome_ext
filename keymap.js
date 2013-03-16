@@ -112,6 +112,9 @@ DEFAULT_SETTINGS = {
     CODE: 72,
     CTRL: true,
     ALT: false
+  },
+  'SELECTOR': {
+    NUM: 20
   }
 };
 keyCodeFromKeyName = function(name){

@@ -1,4 +1,4 @@
-var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, SELECTOR_NUM, WEB_SEARCH_LIST, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, makeSelectorConsole;
+var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, DEFAULT_SELECTOR_NUM, WEB_SEARCH_LIST, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm;
 p = prelude;
 CTRL_KEYCODE = 17;
 ALT_KEYCODE = 18;
@@ -9,7 +9,7 @@ ITEM_TYPE_OF = {
   websearch: 'WEB',
   command: 'COM'
 };
-SELECTOR_NUM = 20;
+DEFAULT_SELECTOR_NUM = 20;
 WEB_SEARCH_LIST = [
   {
     title: 'google検索',
@@ -99,29 +99,12 @@ isFocusingForm = function(){
   console.log(focusElems.attr('type'));
   return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
 };
-makeSelectorConsole = function(list){
-  var ts, t;
-  if ($('#selectorList')) {
-    $('#selectorList').remove();
-  }
-  console.log(list);
-  ts = p.concat(p.take(SELECTOR_NUM, (function(){
-    var i$, ref$, len$, results$ = [];
-    for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
-      t = ref$[i$];
-      results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>');
-    }
-    return results$;
-  }())));
-  $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
-  return $('#selectorList tr:first').addClass("selected");
-};
 chrome.storage.sync.get('settings', function(d){
-  var KEY, keyMapper, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
+  var KEY, keyMapper, selector_num, ref$, ref1$, ref2$, makeSelectorConsole, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
   console.log(d);
   KEY = DEFAULT_SETTINGS;
-  if (d.settings != null) {
-    import$(KEY, d.settings);
+  if (d.settings.key != null) {
+    import$(KEY, d.settings.key);
   }
   console.log(KEY);
   keyMapper = function(keyCode, ctrl, alt){
@@ -136,6 +119,25 @@ chrome.storage.sync.get('settings', function(d){
       }
       return results$;
     }()));
+  };
+  selector_num = (ref$ = (ref1$ = d.settings) != null ? (ref2$ = ref1$.selector) != null ? ref2$.NUM : void 8 : void 8) != null ? ref$ : DEFAULT_SELECTOR_NUM;
+  console.log(selector_num);
+  makeSelectorConsole = function(list){
+    var ts, t;
+    if ($('#selectorList')) {
+      $('#selectorList').remove();
+    }
+    console.log(list);
+    ts = p.concat(p.take(selector_num, (function(){
+      var i$, ref$, len$, results$ = [];
+      for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
+        t = ref$[i$];
+        results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>');
+      }
+      return results$;
+    }())));
+    $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
+    return $('#selectorList tr:first').addClass("selected");
   };
   Main = (function(){
     Main.displayName = 'Main';

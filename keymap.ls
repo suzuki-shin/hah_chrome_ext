@@ -76,6 +76,7 @@ DEFAULT_SETTINGS =
   'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup
   'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off} # pagedown
   'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off} # Ctrl+h
+  'SELECTOR':                  {NUM: 20}
 
 keyCodeFromKeyName = (name) ->
   ks = [k for k,v of KEYMAP when v == name]

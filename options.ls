@@ -5,15 +5,17 @@ restoreSettings =->
     console.log('sync.get')
     console.log(d)
 
-    hitahint_start_code   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CODE else DEFAULT_SETTINGS.START_HITAHINT.CODE
-    hitahint_start_ctrl   = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.CTRL else DEFAULT_SETTINGS.START_HITAHINT.CTRL
-    hitahint_start_alt    = if d.settings? and d.settings.START_HITAHINT? then d.settings.START_HITAHINT.ALT  else DEFAULT_SETTINGS.START_HITAHINT.ALT
-    tab_select_start_code = if d.settings? and d.settings.TOGGLE_SELECTOR? then d.settings.TOGGLE_SELECTOR.CODE else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
-    tab_select_start_ctrl = if d.settings? and d.settings.TOGGLE_SELECTOR? then d.settings.TOGGLE_SELECTOR.CTRL else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
-    tab_select_start_alt  = if d.settings? and d.settings.TOGGLE_SELECTOR? then d.settings.TOGGLE_SELECTOR.ALT  else DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
-    cancel_code           = if d.settings? and d.settings.CANCEL then d.settings.CANCEL.CODE else DEFAULT_SETTINGS.CANCEL.CODE
-    cancel_ctrl           = if d.settings? and d.settings.CANCEL then d.settings.CANCEL.CTRL else DEFAULT_SETTINGS.CANCEL.CTRL
-    cancel_alt            = if d.settings? and d.settings.CANCEL then d.settings.CANCEL.ALT  else DEFAULT_SETTINGS.CANCEL.ALT
+    hitahint_start_code   = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.CODE else DEFAULT_SETTINGS.START_HITAHINT.CODE
+    hitahint_start_ctrl   = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.CTRL else DEFAULT_SETTINGS.START_HITAHINT.CTRL
+    hitahint_start_alt    = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.ALT  else DEFAULT_SETTINGS.START_HITAHINT.ALT
+    tab_select_start_code = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CODE else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
+    tab_select_start_ctrl = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CTRL else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
+    tab_select_start_alt  = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.ALT  else DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+    cancel_code           = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.CODE else DEFAULT_SETTINGS.CANCEL.CODE
+    cancel_ctrl           = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.CTRL else DEFAULT_SETTINGS.CANCEL.CTRL
+    cancel_alt            = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.ALT  else DEFAULT_SETTINGS.CANCEL.ALT
+
+    selector_num = if d?.settings?.selector?.NUM? then d.settings.selector.NUM else DEFAULT_SETTINGS.SELECTOR.NUM
 
     $('#hitahint_start').val(KEYMAP[hitahint_start_code])
     $('#hitahint_start_code').val(hitahint_start_code)
@@ -27,27 +29,32 @@ restoreSettings =->
     $('#cancel_code').val(cancel_code)
     $('#cancel_ctrl').attr("checked", cancel_ctrl)
     $('#cancel_alt').attr("checked", cancel_alt)
+
+    $('#selector_num').val(selector_num)
   ))
 
 saveSettings =->
   console.log('saveSettings')
 
   settings =
-    'START_HITAHINT':
-      CODE: parseInt($('#hitahint_start_code').val()) ? DEFAULT_SETTINGS.START_HITAHINT.CODE
-      CTRL: $('#hitahint_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.START_HITAHINT.CTRL
-      ALT:  $('#hitahint_start_alt').is(':checked')   ? DEFAULT_SETTINGS.START_HITAHINT.ALT
-    'TOGGLE_SELECTOR':
-      CODE: parseInt($('#tab_select_start_code').val()) ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
-      CTRL: $('#tab_select_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
-      ALT:  $('#tab_select_start_alt').is(':checked')   ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
-    'CANCEL':
-      CODE: parseInt($('#cancel_code').val()) ? DEFAULT_SETTINGS.CANCEL.CODE
-      CTRL: $('#cancel_ctrl').is(':checked')  ?  DEFAULT_SETTINGS.CANCEL.CTRL
-      ALT:  $('#cancel_alt').is(':checked')   ? DEFAULT_SETTINGS.CANCEL.ALT
+    key:
+      'START_HITAHINT':
+        CODE: parseInt($('#hitahint_start_code').val()) ? DEFAULT_SETTINGS.START_HITAHINT.CODE
+        CTRL: $('#hitahint_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.START_HITAHINT.CTRL
+        ALT:  $('#hitahint_start_alt').is(':checked')   ? DEFAULT_SETTINGS.START_HITAHINT.ALT
+      'TOGGLE_SELECTOR':
+        CODE: parseInt($('#tab_select_start_code').val()) ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
+        CTRL: $('#tab_select_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
+        ALT:  $('#tab_select_start_alt').is(':checked')   ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+      'CANCEL':
+        CODE: parseInt($('#cancel_code').val()) ? DEFAULT_SETTINGS.CANCEL.CODE
+        CTRL: $('#cancel_ctrl').is(':checked')  ?  DEFAULT_SETTINGS.CANCEL.CTRL
+        ALT:  $('#cancel_alt').is(':checked')   ? DEFAULT_SETTINGS.CANCEL.ALT
+    selector:
+      'NUM': parseInt($('#selector_num').val()) ? DEFAULT_SETTINGS.SELECTOR.NUM
 
   console.log(settings)
-  chrome.storage.sync.set({'settings': settings})
+  chrome.storage.sync.set({'settings': settings}, ((e) -> console.log(e)))
 
 $(->
   restoreSettings()
