@@ -103,7 +103,7 @@ chrome.storage.sync.get('settings', function(d){
   var KEY, keyMapper, selector_num, ref$, ref1$, ref2$, makeSelectorConsole, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
   console.log(d);
   KEY = DEFAULT_SETTINGS;
-  if (d.settings.key != null) {
+  if (d.settings.key) {
     import$(KEY, d.settings.key);
   }
   console.log(KEY);
