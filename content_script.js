@@ -1,4 +1,4 @@
-var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, DEFAULT_SELECTOR_NUM, WEB_SEARCH_LIST, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm;
+var p, CTRL_KEYCODE, ALT_KEYCODE, ITEM_TYPE_OF, DEFAULT_SELECTOR_NUM, FORM_INPUT_FIELDS, CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm;
 p = prelude;
 CTRL_KEYCODE = 17;
 ALT_KEYCODE = 18;
@@ -10,21 +10,6 @@ ITEM_TYPE_OF = {
   command: 'COM'
 };
 DEFAULT_SELECTOR_NUM = 20;
-WEB_SEARCH_LIST = [
-  {
-    title: 'google検索',
-    url: 'https://www.google.co.jp/#hl=ja&q=',
-    type: 'websearch'
-  }, {
-    title: 'alc辞書',
-    url: 'http://eow.alc.co.jp/search?ref=sa&q=',
-    type: 'websearch'
-  }, {
-    title: 'urlecho',
-    url: 'http://urlecho.com/',
-    type: 'websearch'
-  }
-];
 FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select';
 CLICKABLES = 'a';
 _HINT_KEYS = {
@@ -169,7 +154,7 @@ chrome.storage.sync.get('settings', function(d){
       case 'START_HITAHINT':
         return constructor.startHah();
       case 'FOCUS_FORM':
-        return constructor.focusForm();
+        return constructor.focusForm(e);
       case 'TOGGLE_SELECTOR':
         return constructor.toggleSelector();
       default:
@@ -199,7 +184,8 @@ chrome.storage.sync.get('settings', function(d){
       $('#selectorConsole').show();
       return $('#selectorInput').focus();
     };
-    constructor.focusForm = function(){
+    constructor.focusForm = function(e){
+      e.preventDefault();
       Main.mode = FormFocusMode;
       Main.formInputFieldIndex = 0;
       return $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus();
@@ -327,7 +313,7 @@ chrome.storage.sync.get('settings', function(d){
       };
       console.log('filterSelector');
       text = $('#selectorInput').val();
-      makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST));
+      makeSelectorConsole(filtering(text, Main.list).concat(COMMAND_LIST));
       return $('#selectorConsole').show();
     };
     constructor.toggleSelector = function(e){

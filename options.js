@@ -9,7 +9,7 @@ for (k in ref$ = KEYMAP) {
 AVAILABLE_KEYCODES = res$;
 restoreSettings = function(){
   return chrome.storage.sync.get('settings', function(d){
-    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, cancel_code, cancel_ctrl, cancel_alt, selector_num;
+    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, form_focus_code, form_focus_ctrl, form_focus_alt, cancel_code, cancel_ctrl, cancel_alt, selector_num;
     console.log('sync.get');
     console.log(d);
     hitahint_start_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
@@ -30,6 +30,15 @@ restoreSettings = function(){
     tab_select_start_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.TOGGLE_SELECTOR : void 8 : void 8 : void 8) != null
       ? d.settings.key.TOGGLE_SELECTOR.ALT
       : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT;
+    form_focus_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
+      ? d.settings.key.FOCUS_FORM.CODE
+      : DEFAULT_SETTINGS.FOCUS_FORM.CODE;
+    form_focus_ctrl = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
+      ? d.settings.key.FOCUS_FORM.CTRL
+      : DEFAULT_SETTINGS.FOCUS_FORM.CTRL;
+    form_focus_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
+      ? d.settings.key.FOCUS_FORM.ALT
+      : DEFAULT_SETTINGS.FOCUS_FORM.ALT;
     cancel_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.CANCEL : void 8 : void 8 : void 8) != null
       ? d.settings.key.CANCEL.CODE
       : DEFAULT_SETTINGS.CANCEL.CODE;
@@ -50,6 +59,10 @@ restoreSettings = function(){
     $('#tab_select_start_code').val(tab_select_start_code);
     $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl);
     $('#tab_select_start_alt').attr("checked", tab_select_start_alt);
+    $('#form_focus').val(KEYMAP[form_focus_code]);
+    $('#form_focus_code').val(form_focus_code);
+    $('#form_focus_ctrl').attr("checked", form_focus_ctrl);
+    $('#form_focus_alt').attr("checked", form_focus_alt);
     $('#cancel').val(KEYMAP[cancel_code]);
     $('#cancel_code').val(cancel_code);
     $('#cancel_ctrl').attr("checked", cancel_ctrl);
@@ -83,6 +96,17 @@ saveSettings = function(){
         ALT: (ref$ = $('#tab_select_start_alt').is(':checked')) != null
           ? ref$
           : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+      },
+      'FOCUS_FORM': {
+        CODE: (ref$ = parseInt($('#form_focus_code').val())) != null
+          ? ref$
+          : DEFAULT_SETTINGS.FOCUS_FORM.CODE,
+        CTRL: (ref$ = $('#form_focus_ctrl').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.FOCUS_FORM.CTRL,
+        ALT: (ref$ = $('#form_focus_alt').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.FOCUS_FORM.ALT
       },
       'CANCEL': {
         CODE: (ref$ = parseInt($('#cancel_code').val())) != null
@@ -122,6 +146,7 @@ $(function(){
     switch (id) {
     case 'hitahint_start':
     case 'tab_select_start':
+    case 'form_focus':
     case 'cancel':
       if (in$(e.keyCode, AVAILABLE_KEYCODES)) {
         e.preventDefault();

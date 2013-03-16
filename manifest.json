@@ -1,7 +1,7 @@
 {
     "name": "hah",
     "description" : "hit a hint and tab switcher",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -10,6 +10,7 @@
                 "jquery-1.9.0.min.js",
                 "prelude.min.js",
                 "keymap.js",
+                "command_settings.js",
                 "content_script.js"
             ],
             "all_frames": false

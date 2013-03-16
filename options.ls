@@ -11,6 +11,9 @@ restoreSettings =->
     tab_select_start_code = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CODE else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
     tab_select_start_ctrl = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CTRL else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
     tab_select_start_alt  = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.ALT  else DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+    form_focus_code = if d?.settings?.key?.FOCUS_FORM? then d.settings.key.FOCUS_FORM.CODE else DEFAULT_SETTINGS.FOCUS_FORM.CODE
+    form_focus_ctrl = if d?.settings?.key?.FOCUS_FORM? then d.settings.key.FOCUS_FORM.CTRL else DEFAULT_SETTINGS.FOCUS_FORM.CTRL
+    form_focus_alt  = if d?.settings?.key?.FOCUS_FORM? then d.settings.key.FOCUS_FORM.ALT  else DEFAULT_SETTINGS.FOCUS_FORM.ALT
     cancel_code           = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.CODE else DEFAULT_SETTINGS.CANCEL.CODE
     cancel_ctrl           = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.CTRL else DEFAULT_SETTINGS.CANCEL.CTRL
     cancel_alt            = if d?.settings?.key?.CANCEL? then d.settings.key.CANCEL.ALT  else DEFAULT_SETTINGS.CANCEL.ALT
@@ -25,6 +28,10 @@ restoreSettings =->
     $('#tab_select_start_code').val(tab_select_start_code)
     $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl)
     $('#tab_select_start_alt').attr("checked", tab_select_start_alt)
+    $('#form_focus').val(KEYMAP[form_focus_code])
+    $('#form_focus_code').val(form_focus_code)
+    $('#form_focus_ctrl').attr("checked", form_focus_ctrl)
+    $('#form_focus_alt').attr("checked", form_focus_alt)
     $('#cancel').val(KEYMAP[cancel_code])
     $('#cancel_code').val(cancel_code)
     $('#cancel_ctrl').attr("checked", cancel_ctrl)
@@ -46,6 +53,10 @@ saveSettings =->
         CODE: parseInt($('#tab_select_start_code').val()) ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
         CTRL: $('#tab_select_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
         ALT:  $('#tab_select_start_alt').is(':checked')   ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+      'FOCUS_FORM':
+        CODE: parseInt($('#form_focus_code').val()) ? DEFAULT_SETTINGS.FOCUS_FORM.CODE
+        CTRL: $('#form_focus_ctrl').is(':checked')  ? DEFAULT_SETTINGS.FOCUS_FORM.CTRL
+        ALT:  $('#form_focus_alt').is(':checked')   ? DEFAULT_SETTINGS.FOCUS_FORM.ALT
       'CANCEL':
         CODE: parseInt($('#cancel_code').val()) ? DEFAULT_SETTINGS.CANCEL.CODE
         CTRL: $('#cancel_ctrl').is(':checked')  ?  DEFAULT_SETTINGS.CANCEL.CTRL
@@ -66,7 +77,7 @@ $(->
     return if not id
 
     switch id
-    case 'hitahint_start', 'tab_select_start', 'cancel'
+    case 'hitahint_start', 'tab_select_start', 'form_focus', 'cancel'
       if e.keyCode in AVAILABLE_KEYCODES
         e.preventDefault()
         keyName = KEYMAP[e.keyCode]

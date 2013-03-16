@@ -6,11 +6,6 @@ ALT_KEYCODE = 18
 ITEM_TYPE_OF = {tab: 'TAB', history: 'HIS', bookmark: 'BKM', websearch: 'WEB', command: 'COM'}
 DEFAULT_SELECTOR_NUM = 20
 
-WEB_SEARCH_LIST =
-  {title: 'google検索', url: 'https://www.google.co.jp/#hl=ja&q=', type: 'websearch'}
-  {title: 'alc辞書', url: 'http://eow.alc.co.jp/search?ref=sa&q=', type: 'websearch'}
-  {title: 'urlecho', url: 'http://urlecho.com/', type: 'websearch'}
-
 FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select'
 # FORM_INPUT_FIELDS = 'input[type="text"], textarea, select'
 CLICKABLES = 'a'
@@ -90,7 +85,7 @@ chrome.storage.sync.get('settings', ((d) ->
 
       switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
       case 'START_HITAHINT'  then @@startHah()
-      case 'FOCUS_FORM'      then @@focusForm()
+      case 'FOCUS_FORM'      then @@focusForm(e)
       case 'TOGGLE_SELECTOR' then @@toggleSelector()
   #     case KEY_CODE.BACK_HISTORY    then @@backHistory()
       default (-> console.log('default'))
@@ -114,7 +109,8 @@ chrome.storage.sync.get('settings', ((d) ->
       $('#selectorConsole').show()
       $('#selectorInput').focus()
 
-    @@focusForm =->
+    @@focusForm = (e) ->
+      e.preventDefault()
       Main.mode = FormFocusMode
       Main.formInputFieldIndex = 0
       $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
@@ -210,7 +206,7 @@ chrome.storage.sync.get('settings', ((d) ->
 
       console.log('filterSelector')
       text = $('#selectorInput').val()
-      makeSelectorConsole(filtering(text, Main.list).concat(WEB_SEARCH_LIST))
+      makeSelectorConsole(filtering(text, Main.list).concat(COMMAND_LIST))
       $('#selectorConsole').show()
 
     @@toggleSelector = (e) ->
