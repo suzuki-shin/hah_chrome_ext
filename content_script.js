@@ -19,6 +19,10 @@ WEB_SEARCH_LIST = [
     title: 'alc辞書',
     url: 'http://eow.alc.co.jp/search?ref=sa&q=',
     type: 'websearch'
+  }, {
+    title: 'urlecho',
+    url: 'http://urlecho.com/',
+    type: 'websearch'
   }
 ];
 FORM_INPUT_FIELDS = 'input[type="text"]:not("#selectorInput"), textarea, select';
