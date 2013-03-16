@@ -8,6 +8,8 @@
 - [ ] hatebu-extensionも統合するか
 - [ ] evernoteもtab selectorに追加する
 - [ ] textcopyモードをつける
+- [ ] excite翻訳コマンドをつける
+- [ ] urlecho.comコマンドをつける
 - [ ] ページの一番上に移動する機能
 - [ ] ページの一番下に移動する機能
 - [ ] 除外urlを自分で設定できるようにする
