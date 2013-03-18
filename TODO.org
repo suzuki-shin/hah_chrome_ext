@@ -1,5 +1,7 @@
 * TODO
-- [X] selector_numもoptionで設定できるようにする
+- [ ] zip.shを
+ - [ ] manifest.jsonをみて$VERを勝手にいれるようにする
+ - [ ] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする
 - [ ] アイコンをつけて、そこでON/OFFできるようにする
 - [ ] 別タブで開くオプションをつける
 - [ ] hitahintの1key目による表示の絞り込み(強調表示)
@@ -9,7 +11,6 @@
 - [ ] evernoteもtab selectorに追加する
 - [ ] textcopyモードをつける
 - [ ] excite翻訳コマンドをつける
-- [X] urlecho.comコマンドをつける
 - [ ] ページの一番上に移動する機能
 - [ ] ページの一番下に移動する機能
 - [ ] 除外urlを自分で設定できるようにする
@@ -17,6 +18,8 @@
  - [ ] facebookのグループでコメントつけるときにだめだった
 - [ ] helpの表示機能つける
 - [ ] コマンドをいろいろつける
+- [X] selector_numもoptionで設定できるようにする
+- [X] urlecho.comコマンドをつける
 - [X] selectorのカーソルがループするように(もしくは行き過ぎないように)
 - [X] fayにする
 - [X] キーの設定を自分でできるようにする
