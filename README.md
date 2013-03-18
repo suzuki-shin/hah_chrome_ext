@@ -7,6 +7,6 @@ Install
 -------
 https://chrome.google.com/webstore/detail/hah/ikljpmlpcmlghjponhkhibgbfhjgjbki
 
-Compile
+Compiling LiveScript continuously
 -------
-./bin/compile-ls.sh
+> $ ./bin/compile-ls.sh
