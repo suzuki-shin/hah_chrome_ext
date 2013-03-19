@@ -1,7 +1,5 @@
 * TODO
-- [X] zip.shを
- - [X] manifest.jsonをみて$VERを勝手にいれるようにする
- - [X] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする
+- [ ] モードが変わったときにnotifyだすようにする
 - [ ] アイコンをつけて、そこでON/OFFできるようにする
 - [ ] 別タブで開くオプションをつける
 - [ ] hitahintの1key目による表示の絞り込み(強調表示)
@@ -18,6 +16,9 @@
  - [ ] facebookのグループでコメントつけるときにだめだった
 - [ ] helpの表示機能つける
 - [ ] コマンドをいろいろつける
+- [X] zip.shを
+ - [X] manifest.jsonをみて$VERを勝手にいれるようにする
+ - [X] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする
 - [X] selector_numもoptionで設定できるようにする
 - [X] urlecho.comコマンドをつける
 - [X] selectorのカーソルがループするように(もしくは行き過ぎないように)

@@ -13,7 +13,7 @@ var package_path = "package/hah_chrome_ext-" + manifest.version + ".zip";
 
 // abort if this version zip file exists
 if (fs.existsSync(package_path)) {
-    console.log(package_path + "is already exists.");
+    console.log(package_path + " is already exists.");
     return;
 }
 
