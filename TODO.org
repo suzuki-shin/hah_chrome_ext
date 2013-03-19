@@ -1,7 +1,7 @@
 * TODO
-- [ ] zip.shを
- - [ ] manifest.jsonをみて$VERを勝手にいれるようにする
- - [ ] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする
+- [X] zip.shを
+ - [X] manifest.jsonをみて$VERを勝手にいれるようにする
+ - [X] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする
 - [ ] アイコンをつけて、そこでON/OFFできるようにする
 - [ ] 別タブで開くオプションをつける
 - [ ] hitahintの1key目による表示の絞り込み(強調表示)

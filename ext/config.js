@@ -8,3 +8,6 @@ if (DEBUG_MODE === false) {
     return true;
   };
 }
+exports.is_debug_mode = function(){
+  return DEBUG_MODE;
+};
