@@ -10,3 +10,10 @@ https://chrome.google.com/webstore/detail/hah/ikljpmlpcmlghjponhkhibgbfhjgjbki
 Compiling LiveScript continuously
 -------
 > $ ./bin/compile-ls.sh
+
+Dependencies
+-------
+ * node.js http://nodejs.org/
+ * LiveScript http://livescript.net/
+ * prelude.ls http://gkz.github.com/prelude-ls/
+ * jQuery http://jquery.com/
