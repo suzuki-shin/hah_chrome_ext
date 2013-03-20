@@ -1,15 +1,15 @@
 var COMMAND_LIST;
 COMMAND_LIST = [
   {
-    title: 'google検索',
+    title: 'google search',
     url: 'https://www.google.co.jp/#hl=ja&q=',
     type: 'websearch'
   }, {
-    title: 'alc辞書',
+    title: 'alc dictionary',
     url: 'http://eow.alc.co.jp/search?ref=sa&q=',
     type: 'websearch'
   }, {
-    title: 'urlecho',
+    title: 'url echo',
     url: 'http://urlecho.com/',
     type: 'websearch'
   }

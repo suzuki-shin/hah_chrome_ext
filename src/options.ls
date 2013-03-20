@@ -1,3 +1,5 @@
+p = prelude
+
 AVAILABLE_KEYCODES = [parseInt(k) for k, v of KEYMAP when k >= 27]
 
 restoreSettings =->
@@ -20,6 +22,8 @@ restoreSettings =->
 
     selector_num = if d?.settings?.selector?.NUM? then d.settings.selector.NUM else DEFAULT_SETTINGS.SELECTOR.NUM
 
+    search_list = if d?.settings?.search_list? then d.settings.search_list else COMMAND_LIST
+
     $('#hitahint_start').val(KEYMAP[hitahint_start_code])
     $('#hitahint_start_code').val(hitahint_start_code)
     $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl)
@@ -38,10 +42,23 @@ restoreSettings =->
     $('#cancel_alt').attr("checked", cancel_alt)
 
     $('#selector_num').val(selector_num)
+
+    for s,i in search_list
+      $('#search_name' + i).val(s.title)
+      $('#search_url' + i).val(s.url)
   ))
 
 saveSettings =->
   console.log('saveSettings')
+
+  search_list = [
+    {title: $('#search_name' + 0).val(), url: $('#search_url' + 0).val(), type: 'websearch'}
+    {title: $('#search_name' + 1).val(), url: $('#search_url' + 1).val(), type: 'websearch'}
+    {title: $('#search_name' + 2).val(), url: $('#search_url' + 2).val(), type: 'websearch'}
+    {title: $('#search_name' + 3).val(), url: $('#search_url' + 3).val(), type: 'websearch'}
+    {title: $('#search_name' + 4).val(), url: $('#search_url' + 4).val(), type: 'websearch'}
+  ]
+  console.log(search_list)
 
   settings =
     key:
@@ -63,6 +80,8 @@ saveSettings =->
         ALT:  $('#cancel_alt').is(':checked')   ? DEFAULT_SETTINGS.CANCEL.ALT
     selector:
       'NUM': parseInt($('#selector_num').val()) ? DEFAULT_SETTINGS.SELECTOR.NUM
+    search_list: search_list
+
 
   console.log(settings)
   chrome.storage.sync.set({'settings': settings}, ((e) -> console.log(e)))

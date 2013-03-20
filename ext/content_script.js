@@ -89,7 +89,7 @@ isFocusingForm = function(){
   return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
 };
 chrome.storage.sync.get('settings', function(d){
-  var KEY, keyMapper, selector_num, ref$, ref1$, ref2$, makeSelectorConsole, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
+  var KEY, keyMapper, selector_num, ref$, ref1$, ref2$, searchList, makeSelectorConsole, Main, NeutralMode, SelectorMode, HitAHintMode, FormFocusMode;
   log(d);
   KEY = DEFAULT_SETTINGS;
   if (d.settings.key) {
@@ -111,6 +111,9 @@ chrome.storage.sync.get('settings', function(d){
   };
   selector_num = (ref$ = (ref1$ = d.settings) != null ? (ref2$ = ref1$.selector) != null ? ref2$.NUM : void 8 : void 8) != null ? ref$ : DEFAULT_SELECTOR_NUM;
   log(selector_num);
+  searchList = p.filter(function(l){
+    return l.url != null && l.url !== '';
+  }, (ref$ = d.settings.search_list) != null ? ref$ : COMMAND_LIST);
   makeSelectorConsole = function(list){
     var ts, t;
     if ($('#selectorList')) {
@@ -322,7 +325,7 @@ chrome.storage.sync.get('settings', function(d){
       };
       log('filterSelector');
       text = $('#selectorInput').val();
-      makeSelectorConsole(filtering(text, Main.list).concat(COMMAND_LIST));
+      makeSelectorConsole(filtering(text, Main.list).concat(searchList));
       return $('#selectorConsole').show();
     };
     constructor.toggleSelector = function(e){

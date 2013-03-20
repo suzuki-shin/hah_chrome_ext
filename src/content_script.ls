@@ -55,6 +55,8 @@ chrome.storage.sync.get('settings', ((d) ->
   selector_num = d.settings?.selector?.NUM ? DEFAULT_SELECTOR_NUM
   log(selector_num)
 
+  searchList = p.filter(((l) -> l.url? and l.url isnt ''), d.settings.search_list ? COMMAND_LIST)
+
   # (tab|history|bookmark|,,,)のリストをうけとりそれをhtmlにしてappendする
   # makeSelectorConsole :: [{title, url, type}] -> IO Jquery
   makeSelectorConsole = (list) ->
@@ -215,7 +217,7 @@ chrome.storage.sync.get('settings', ((d) ->
 
       log('filterSelector')
       text = $('#selectorInput').val()
-      makeSelectorConsole(filtering(text, Main.list).concat(COMMAND_LIST))
+      makeSelectorConsole(filtering(text, Main.list).concat(searchList))
       $('#selectorConsole').show()
 
     @@toggleSelector = (e) ->
