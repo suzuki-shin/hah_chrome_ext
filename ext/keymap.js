@@ -69,6 +69,11 @@ KEYMAP = {
 };
 DEFAULT_SETTINGS = {
   'START_HITAHINT': {
+    CODE: 82,
+    CTRL: true,
+    ALT: false
+  },
+  'START_HITAHINT_NEWTAB': {
     CODE: 69,
     CTRL: true,
     ALT: false

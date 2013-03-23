@@ -46,7 +46,7 @@ class HitAHintMode
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
     case 'CANCEL' then @@cancel(e)
     default
-      if isHitAHintKey(e.keyCode) then @@hitHitKey(e)
+      if isHitAHintKey(e.keyCode) then @@hitHintKey(e)
 
   @keyupMap = (e, keyMapper, makeSelectorConsole, _) ->
     log('mode: ' + Main.mode)
@@ -65,9 +65,10 @@ class HitAHintMode
     e.preventDefault()
     Main.mode = NeutralMode
     $(CLICKABLES).removeClass('links')
+    $(CLICKABLES).removeClass('links_newtab')
     $('.hintKey').remove()
 
-  @@hitHitKey = (e) ->
+  @@hitHintKey = (e) ->
     e.preventDefault()
     log('hit!: ' + e.keyCode + ', 1stkey: ' + @firstKeyCode)
 

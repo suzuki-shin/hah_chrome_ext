@@ -11,10 +11,11 @@ class NeutralMode
       return
 
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-    case 'START_HITAHINT'  then @@startHah()
-    case 'FOCUS_FORM'      then @@focusForm(e)
-    case 'TOGGLE_SELECTOR' then @@toggleSelector()
-    case 'CANCEL'          then @@cancel(e)
+    case 'START_HITAHINT'        then @@startHah()
+    case 'START_HITAHINT_NEWTAB' then @@startHahNewTab()
+    case 'FOCUS_FORM'            then @@focusForm(e)
+    case 'TOGGLE_SELECTOR'       then @@toggleSelector()
+    case 'CANCEL'                then @@cancel(e)
 #     case KEY_CODE.BACK_HISTORY    then @@backHistory()
     default (-> log('default'))
 #     e.preventDefault()
@@ -45,7 +46,16 @@ class NeutralMode
 
   @@startHah =->
     Main.mode = HitAHintMode
-    $(CLICKABLES).addClass('links').html((i, oldHtml) ->
+    @@_startHaH('links')
+    $('.links').attr("target", "")
+
+  @@startHahNewTab =->
+    Main.mode = HitAHintNewTabMode
+    @@_startHaH('links_newtab')
+    $('.links_newtab').attr("target", "_blank")
+
+  @@_startHaH = (style_cls) ->
+    $(CLICKABLES).addClass(style_cls).html((i, oldHtml) ->
       if HINT_KEYS[indexToKeyCode(i)]?
       then '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml
       else oldHtml)
@@ -57,4 +67,5 @@ class NeutralMode
     $(':focus').blur()
     HitAHintMode.firstKeyCode = null
     $(CLICKABLES).removeClass('links')
+    $(CLICKABLES).removeClass('links_newtab')
     $('.hintKey').remove()

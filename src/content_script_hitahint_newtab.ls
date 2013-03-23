@@ -1,0 +1,1 @@
+class HitAHintNewTabMode extends HitAHintMode

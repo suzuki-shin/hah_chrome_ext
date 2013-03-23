@@ -37,6 +37,7 @@ chrome.storage.sync.get('settings', ((d) ->
   keyMapper = (keyCode, ctrl, alt) ->
     KEY = DEFAULT_SETTINGS
     if d.settings.key then KEY <<< d.settings.key
+    log('keyMapper')
     log(KEY)
     p.first([k for k, v of KEY when v.CODE == keyCode and v.CTRL == ctrl and v.ALT == alt])
 

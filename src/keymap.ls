@@ -67,7 +67,8 @@ KEYMAP =
   190 : '.'
 
 DEFAULT_SETTINGS =
-  'START_HITAHINT':            {CODE: 69,  CTRL: on,  ALT: off} # Ctrl+e
+  'START_HITAHINT':            {CODE: 82,  CTRL: on,  ALT: off} # Ctrl+e
+  'START_HITAHINT_NEWTAB':     {CODE: 69,  CTRL: on,  ALT: off } # Ctrl+e
   'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
   'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
   'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off} # ESC

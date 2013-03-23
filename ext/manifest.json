@@ -1,7 +1,7 @@
 {
     "name": "hah",
     "description" : "hit a hint and tab switcher",
-    "version": "0.4.13",
+    "version": "0.5.00",
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -13,6 +13,11 @@
                 "config.js",
                 "keymap.js",
                 "command_settings.js",
+                "content_script_hitahint.js",
+                "content_script_hitahint_newtab.js",
+                "content_script_selector.js",
+                "content_script_formfocus.js",
+                "content_script_neutral.js",
                 "content_script.js"
             ],
             "all_frames": false

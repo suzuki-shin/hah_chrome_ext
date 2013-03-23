@@ -2,7 +2,8 @@
 /*  background-color: pink; */
 }
 
-.links .hintKey {
+.links .hintKey,
+.links_newtab .hintKey {
     position: absolute;
 /*  left: -3px; */
     display: inline;
@@ -14,6 +15,9 @@
     font-size: 12pt;
     text-align: center;
     z-index:10000000;
+}
+.links_newtab .hintKey {
+    background-color: #1a1;
 }
 #selectorConsole {
     display: none;
