@@ -42,13 +42,303 @@ isFocusingForm =->
     focusElems[0].nodeName.toLowerCase() == "textarea"
   )
 
+
+class Main
+
+Main.start = (keyMapper, makeSelectorConsole) ->
+  Main.ctrl = off
+  Main.alt = off
+  Main.mode = NeutralMode
+
+  $(document).keyup((e) -> Main.mode.keyupMap(e, keyMapper, makeSelectorConsole))
+  $(document).keydown((e) -> Main.mode.keydownMap(e, keyMapper))
+
+  chrome.extension.sendMessage({mes: "makeSelectorConsole"}, ((list) ->
+    log('extension.sendMessage')
+    log(list)
+    Main.list = list
+    $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>')
+    makeSelectorConsole(list)
+  ))
+
+  $('body').on('submit', '#selectorForm', (e) -> SelectorMode.decideSelector(e, makeSelectorConsole))
+
+  if isFocusingForm() then Main.mode = FormFocusMode
+
+  $('body').on('focus', FORM_INPUT_FIELDS, (->
+    log('form focus')
+    Main.mode = FormFocusMode
+  ))
+  $('body').on('blur', FORM_INPUT_FIELDS, (->
+    log('form blur')
+    Main.mode = NeutralMode
+  ))
+
+# 何のモードでもない状態を表すモードのクラス
+class NeutralMode
+  @keydownMap = (e, keyMapper) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'START_HITAHINT'  then @@startHah()
+    case 'FOCUS_FORM'      then @@focusForm(e)
+    case 'TOGGLE_SELECTOR' then @@toggleSelector()
+    case 'CANCEL'          then @@cancel(e)
+#     case KEY_CODE.BACK_HISTORY    then @@backHistory()
+    default (-> log('default'))
+#     e.preventDefault()
+
+  @keyupMap = (e, keyMapper, makeSelectorConsole) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+  @@backHistory =->
+    history.back()
+
+  @@toggleSelector =->
+    Main.mode = SelectorMode
+    $('#selectorConsole').show()
+    $('#selectorInput').focus()
+
+  @@focusForm = (e) ->
+    e.preventDefault()
+    Main.mode = FormFocusMode
+    Main.formInputFieldIndex = 0
+    $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
+
+  @@startHah =->
+    Main.mode = HitAHintMode
+    $(CLICKABLES).addClass('links').html((i, oldHtml) ->
+      if HINT_KEYS[indexToKeyCode(i)]?
+      then '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml
+      else oldHtml)
+
+  @@cancel = (e) ->
+    e.preventDefault()
+    Main.mode = NeutralMode
+    $('#selectorConsole').hide()
+    $(':focus').blur()
+    HitAHintMode.firstKeyCode = null
+    $(CLICKABLES).removeClass('links')
+    $('.hintKey').remove()
+
+class SelectorMode
+  @keydownMap = (e, keyMapper) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'MOVE_NEXT_SELECTOR_CURSOR' then @@moveNextCursor(e)
+    case 'MOVE_PREV_SELECTOR_CURSOR' then @@movePrevCursor(e)
+    case 'CANCEL'                    then @@cancel(e)
+    default (-> alert(e.keyCode))
+
+  @keyupMap = (e, keyMapper, makeSelectorConsole) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    @@filterSelector(e, makeSelectorConsole)
+
+  @@cancel = (e) ->
+    e.preventDefault()
+    Main.mode = NeutralMode
+    $('#selectorConsole').hide()
+    $(':focus').blur()
+
+  @filterSelector = (e, makeSelectorConsole) ->
+    log('filterSelector1')
+    if e.keyCode < 48 or e.keyCode > 90
+      return
+    log('filterSelector2')
+
+    # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
+    # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
+    filtering = (text, list) ->
+      # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
+      # titleAndUrlMatch :: Elem -> [String] -> Bool
+      matchP = (elem, queries) ->
+        p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
+                     elem.url.toLowerCase().search(q) isnt -1 or
+                     ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
+      p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
+
+    log('filterSelector')
+    text = $('#selectorInput').val()
+    makeSelectorConsole(filtering(text, Main.list).concat(searchList))
+    $('#selectorConsole').show()
+
+  @@toggleSelector = (e) ->
+    e.preventDefault()
+    Main.mode = NeutralMode
+    $('#selectorConsole').hide()
+
+  @@moveNextCursor = (e) ->
+    e.preventDefault()
+    log('moveNextCursor')
+    x = $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
+    if x.length is 0 then $('#selectorList tr').first().addClass("selected")
+
+  @@movePrevCursor = (e) ->
+    e.preventDefault()
+    log('movePrevCursor')
+    x = $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
+    if x.length is 0 then $('#selectorList tr').last().addClass("selected")
+
+  @@decideSelector = (e, makeSelectorConsole) ->
+    e.preventDefault()
+    log('decideSelector')
+    [type, id] = $('#selectorList tr.selected').attr('id').split('-')
+    url = $('#selectorList tr.selected span.url').text()
+    query = $('#selectorInput').val()
+    @@cancel(e)
+    chrome.extension.sendMessage(
+      {mes: "decideSelector", item:{id: id, url: url, type: type, query: query}},
+      ((list) ->
+        Main.list = list
+        makeSelectorConsole(list)
+      ))
+    $('#selectorInput').val('')
+    false
+
+
+class HitAHintMode
+  @keydownMap = (e, keyMapper) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'CANCEL' then @@cancel(e)
+    default
+      if isHitAHintKey(e.keyCode) then @@hitHitKey(e)
+
+  @keyupMap = (e, keyMapper, makeSelectorConsole) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+  @firstKeyCode = null
+
+  @@cancel = (e) ->
+    @@firstKeyCode = null
+    e.preventDefault()
+    Main.mode = NeutralMode
+    $(CLICKABLES).removeClass('links')
+    $('.hintKey').remove()
+
+  @@hitHitKey = (e) ->
+    e.preventDefault()
+    log('hit!: ' + e.keyCode + ', 1stkey: ' + @firstKeyCode)
+
+    if @firstKeyCode is null
+      @firstKeyCode = e.keyCode
+    else
+      idx = keyCodeToIndex(@firstKeyCode,  e.keyCode)
+      log('idx: ' + idx)
+      try
+        $(CLICKABLES)[idx].click()
+        Main.mode = NeutralMode
+        $(CLICKABLES).removeClass('links')
+        $('.hintKey').remove()
+        @firstKeyCode = null
+      catch
+        @firstKeyCode = e.keyCode
+
+
+class FormFocusMode
+  @keydownMap = (e, keyMapper) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = on
+      return
+    log('keydownMap')
+
+  @keyupMap = (e, keyMapper, makeSelectorConsole) ->
+    log('mode: ' + Main.mode)
+    log('keyCode: ' + e.keyCode)
+    log('Ctrl: ' + Main.ctrl)
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+
+    if e.keyCode is CTRL_KEYCODE
+      Main.ctrl = off
+      return
+
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    case 'MOVE_NEXT_FORM' then @@focusNextForm(e)
+    case 'MOVE_PREV_FORM' then @@focusPrevForm(e)
+    case 'CANCEL'         then @@cancel(e)
+    default (-> log('default'))
+
+  @focusNextForm = (e) ->
+    e.preventDefault()
+    log('focusNextForm')
+    Main.formInputFieldIndex += 1
+    log(Main.formInputFieldIndex)
+    log($(FORM_INPUT_FIELDS))
+    log($(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex))
+    if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
+      $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
+
+  @focusPrevForm = (e) ->
+    e.preventDefault()
+    log('focusPrevForm')
+    Main.formInputFieldIndex -= 1
+    log(Main.formInputFieldIndex)
+    log($(FORM_INPUT_FIELDS))
+    log($(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex))
+    if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
+      $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
+
+  @@cancel = (e) ->
+    e.preventDefault()
+    Main.mode = NeutralMode
+    $(':focus').blur()
+
 chrome.storage.sync.get('settings', ((d) ->
   log(d)
-  KEY = DEFAULT_SETTINGS
-  if d.settings.key then KEY <<< d.settings.key
-  log(KEY)
-
   keyMapper = (keyCode, ctrl, alt) ->
+    KEY = DEFAULT_SETTINGS
+    if d.settings.key then KEY <<< d.settings.key
+    log(KEY)
     p.first([k for k, v of KEY when v.CODE == keyCode and v.CTRL == ctrl and v.ALT == alt])
 
 
@@ -69,297 +359,5 @@ chrome.storage.sync.get('settings', ((d) ->
     $('#selectorList tr:first').addClass("selected")
 
 
-
-
-  class Main
-
-  # 何のモードでもない状態を表すモードのクラス
-  class NeutralMode
-    @keydownMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = on
-        return
-
-      switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'START_HITAHINT'  then @@startHah()
-#       case 'FOCUS_FORM'      then @@focusForm(e)
-      case 'TOGGLE_SELECTOR' then @@toggleSelector()
-      case 'CANCEL'          then @@cancel(e)
-  #     case KEY_CODE.BACK_HISTORY    then @@backHistory()
-      default (-> log('default'))
-  #     e.preventDefault()
-
-    @keyupMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = off
-        return
-
-    @@backHistory =->
-      history.back()
-
-    @@toggleSelector =->
-      Main.mode = SelectorMode
-      $('#selectorConsole').show()
-      $('#selectorInput').focus()
-
-    @@focusForm = (e) ->
-      e.preventDefault()
-      Main.mode = FormFocusMode
-      Main.formInputFieldIndex = 0
-      $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
-
-    @@startHah =->
-      Main.mode = HitAHintMode
-      $(CLICKABLES).addClass('links').html((i, oldHtml) ->
-        if HINT_KEYS[indexToKeyCode(i)]?
-        then '<div class="hintKey">' + HINT_KEYS[indexToKeyCode(i)] + '</div> ' + oldHtml
-        else oldHtml)
-
-    @@cancel = (e) ->
-      e.preventDefault()
-      Main.mode = NeutralMode
-      $('#selectorConsole').hide()
-      $(':focus').blur()
-      HitAHintMode.firstKeyCode = null
-      $(CLICKABLES).removeClass('links')
-      $('.hintKey').remove()
-
-  Main.start =->
-    Main.ctrl = off
-    Main.alt = off
-    Main.mode = NeutralMode
-
-    $(document).keyup((e) -> Main.mode.keyupMap(e))
-    $(document).keydown((e) -> Main.mode.keydownMap(e))
-
-    chrome.extension.sendMessage({mes: "makeSelectorConsole"}, ((list) ->
-      log('extension.sendMessage')
-      log(list)
-      Main.list = list
-      $('body').append('<div id="selectorConsole"><form id="selectorForm"><input id="selectorInput" type="text" /></form></div>')
-      makeSelectorConsole(list)
-    ))
-
-    $('body').on('submit', '#selectorForm', (e) -> SelectorMode.decideSelector(e))
-
-    if isFocusingForm() then Main.mode = FormFocusMode
-
-    $('body').on('focus', FORM_INPUT_FIELDS, (->
-      log('form focus')
-      Main.mode = FormFocusMode
-    ))
-    $('body').on('blur', FORM_INPUT_FIELDS, (->
-      log('form blur')
-      Main.mode = NeutralMode
-    ))
-
-  class SelectorMode
-    @keydownMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = on
-        return
-
-      switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'MOVE_NEXT_SELECTOR_CURSOR' then @@moveNextCursor(e)
-      case 'MOVE_PREV_SELECTOR_CURSOR' then @@movePrevCursor(e)
-      case 'CANCEL'                    then @@cancel(e)
-      default (-> alert(e.keyCode))
-
-    @keyupMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = off
-        return
-
-      @@filterSelector(e)
-
-    @@cancel = (e) ->
-      e.preventDefault()
-      Main.mode = NeutralMode
-      $('#selectorConsole').hide()
-      $(':focus').blur()
-
-    @filterSelector = (e) ->
-      log('filterSelector1')
-      if e.keyCode < 48 or e.keyCode > 90
-        return
-      log('filterSelector2')
-
-      # 受け取ったテキストをスペース区切りで分割して、その要素すべてが(tab|history|bookmark)のtitleかtabのurlに含まれるtabのみ返す
-      # filtering :: String -> [{title, url, type}] -> [{title, url, type}]
-      filtering = (text, list) ->
-        # queriesのすべての要素がtitleかurlに見つかるかどうかを返す
-        # titleAndUrlMatch :: Elem -> [String] -> Bool
-        matchP = (elem, queries) ->
-          p.all(p.id, [elem.title.toLowerCase().search(q) isnt -1 or
-                       elem.url.toLowerCase().search(q) isnt -1 or
-                       ITEM_TYPE_OF[elem.type].toLowerCase().search(q) isnt -1 for q in queries])
-        p.filter(((t) -> matchP(t, text.toLowerCase().split(' '))), list)
-
-      log('filterSelector')
-      text = $('#selectorInput').val()
-      makeSelectorConsole(filtering(text, Main.list).concat(searchList))
-      $('#selectorConsole').show()
-
-    @@toggleSelector = (e) ->
-      e.preventDefault()
-      Main.mode = NeutralMode
-      $('#selectorConsole').hide()
-
-    @@moveNextCursor = (e) ->
-      e.preventDefault()
-      log('moveNextCursor')
-      x = $('#selectorList .selected').removeClass("selected").next("tr").addClass("selected")
-      if x.length is 0 then $('#selectorList tr').first().addClass("selected")
-
-    @@movePrevCursor = (e) ->
-      e.preventDefault()
-      log('movePrevCursor')
-      x = $('#selectorList .selected').removeClass("selected").prev("tr").addClass("selected")
-      if x.length is 0 then $('#selectorList tr').last().addClass("selected")
-
-    @@decideSelector = (e) ->
-      e.preventDefault()
-      log('decideSelector')
-      [type, id] = $('#selectorList tr.selected').attr('id').split('-')
-      url = $('#selectorList tr.selected span.url').text()
-      query = $('#selectorInput').val()
-      @@cancel(e)
-      chrome.extension.sendMessage(
-        {mes: "decideSelector", item:{id: id, url: url, type: type, query: query}},
-        ((list) ->
-          Main.list = list
-          makeSelectorConsole(list)
-        ))
-      $('#selectorInput').val('')
-      false
-
-
-  class HitAHintMode
-    @keydownMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = on
-        return
-
-      switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'CANCEL' then @@cancel(e)
-      default
-        if isHitAHintKey(e.keyCode) then @@hitHitKey(e)
-
-    @keyupMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = off
-        return
-
-    @firstKeyCode = null
-
-    @@cancel = (e) ->
-      @@firstKeyCode = null
-      e.preventDefault()
-      Main.mode = NeutralMode
-      $(CLICKABLES).removeClass('links')
-      $('.hintKey').remove()
-
-    @@hitHitKey = (e) ->
-      e.preventDefault()
-      log('hit!: ' + e.keyCode + ', 1stkey: ' + @firstKeyCode)
-
-      if @firstKeyCode is null
-        @firstKeyCode = e.keyCode
-      else
-        idx = keyCodeToIndex(@firstKeyCode,  e.keyCode)
-        log('idx: ' + idx)
-        try
-          $(CLICKABLES)[idx].click()
-          Main.mode = NeutralMode
-          $(CLICKABLES).removeClass('links')
-          $('.hintKey').remove()
-          @firstKeyCode = null
-        catch
-          @firstKeyCode = e.keyCode
-
-
-  class FormFocusMode
-    @keydownMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = on
-        return
-      log('keydownMap')
-
-    @keyupMap = (e) ->
-      log('mode: ' + Main.mode)
-      log('keyCode: ' + e.keyCode)
-      log('Ctrl: ' + Main.ctrl)
-      log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
-
-      if e.keyCode is CTRL_KEYCODE
-        Main.ctrl = off
-        return
-
-      switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
-      case 'MOVE_NEXT_FORM' then @@focusNextForm(e)
-      case 'MOVE_PREV_FORM' then @@focusPrevForm(e)
-      case 'CANCEL'         then @@cancel(e)
-      default (-> log('default'))
-
-    @focusNextForm = (e) ->
-      e.preventDefault()
-      log('focusNextForm')
-      Main.formInputFieldIndex += 1
-      log(Main.formInputFieldIndex)
-      log($(FORM_INPUT_FIELDS))
-      log($(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex))
-      if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
-        $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
-
-    @focusPrevForm = (e) ->
-      e.preventDefault()
-      log('focusPrevForm')
-      Main.formInputFieldIndex -= 1
-      log(Main.formInputFieldIndex)
-      log($(FORM_INPUT_FIELDS))
-      log($(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex))
-      if $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex)?
-        $(FORM_INPUT_FIELDS).eq(Main.formInputFieldIndex).focus()
-
-    @@cancel = (e) ->
-      e.preventDefault()
-      Main.mode = NeutralMode
-      $(':focus').blur()
-
-  Main.start()
+  Main.start(keyMapper, makeSelectorConsole)
 ))
