@@ -10,7 +10,7 @@ for (k in ref$ = KEYMAP) {
 AVAILABLE_KEYCODES = res$;
 restoreSettings = function(){
   return chrome.storage.sync.get('settings', function(d){
-    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, form_focus_code, form_focus_ctrl, form_focus_alt, cancel_code, cancel_ctrl, cancel_alt, selector_num, search_list, i$, len$, i, s, results$ = [];
+    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, hitahint_start_newtab_code, hitahint_start_newtab_ctrl, hitahint_start_newtab_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, form_focus_code, form_focus_ctrl, form_focus_alt, cancel_code, cancel_ctrl, cancel_alt, selector_num, search_list, i$, len$, i, s, results$ = [];
     console.log('sync.get');
     console.log(d);
     hitahint_start_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
@@ -22,6 +22,15 @@ restoreSettings = function(){
     hitahint_start_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
       ? d.settings.key.START_HITAHINT.ALT
       : DEFAULT_SETTINGS.START_HITAHINT.ALT;
+    hitahint_start_newtab_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
+      ? d.settings.key.START_HITAHINT_NEWTAB.CODE
+      : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CODE;
+    hitahint_start_newtab_ctrl = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
+      ? d.settings.key.START_HITAHINT_NEWTAB.CTRL
+      : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CTRL;
+    hitahint_start_newtab_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
+      ? d.settings.key.START_HITAHINT_NEWTAB.ALT
+      : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT;
     tab_select_start_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.TOGGLE_SELECTOR : void 8 : void 8 : void 8) != null
       ? d.settings.key.TOGGLE_SELECTOR.CODE
       : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE;
@@ -57,6 +66,10 @@ restoreSettings = function(){
     $('#hitahint_start_code').val(hitahint_start_code);
     $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl);
     $('#hitahint_start_alt').attr("checked", hitahint_start_alt);
+    $('#hitahint_start_newtab').val(KEYMAP[hitahint_start_newtab_code]);
+    $('#hitahint_start_newtab_code').val(hitahint_start_newtab_code);
+    $('#hitahint_start_newtab_ctrl').attr("checked", hitahint_start_newtab_ctrl);
+    $('#hitahint_start_newtab_alt').attr("checked", hitahint_start_newtab_alt);
     $('#tab_select_start').val(KEYMAP[tab_select_start_code]);
     $('#tab_select_start_code').val(tab_select_start_code);
     $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl);
@@ -119,6 +132,17 @@ saveSettings = function(){
           ? ref$
           : DEFAULT_SETTINGS.START_HITAHINT.ALT
       },
+      'START_HITAHINT_NEWTAB': {
+        CODE: (ref$ = parseInt($('#hitahint_start_newtab_code').val())) != null
+          ? ref$
+          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CODE,
+        CTRL: (ref$ = $('#hitahint_start_newtab_ctrl').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CTRL,
+        ALT: (ref$ = $('#hitahint_start_newtab_alt').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT
+      },
       'TOGGLE_SELECTOR': {
         CODE: (ref$ = parseInt($('#tab_select_start_code').val())) != null
           ? ref$
@@ -179,6 +203,7 @@ $(function(){
     }
     switch (id) {
     case 'hitahint_start':
+    case 'hitahint_start_newtab':
     case 'tab_select_start':
     case 'form_focus':
     case 'cancel':

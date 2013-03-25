@@ -74,7 +74,7 @@ DEFAULT_SETTINGS = {
     ALT: false
   },
   'START_HITAHINT_NEWTAB': {
-    CODE: 69,
+    CODE: 84,
     CTRL: true,
     ALT: false
   },

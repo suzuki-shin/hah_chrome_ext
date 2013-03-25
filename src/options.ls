@@ -10,6 +10,9 @@ restoreSettings =->
     hitahint_start_code   = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.CODE else DEFAULT_SETTINGS.START_HITAHINT.CODE
     hitahint_start_ctrl   = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.CTRL else DEFAULT_SETTINGS.START_HITAHINT.CTRL
     hitahint_start_alt    = if d?.settings?.key?.START_HITAHINT? then d.settings.key.START_HITAHINT.ALT  else DEFAULT_SETTINGS.START_HITAHINT.ALT
+    hitahint_start_newtab_code   = if d?.settings?.key?.START_HITAHINT_NEWTAB? then d.settings.key.START_HITAHINT_NEWTAB.CODE else DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CODE
+    hitahint_start_newtab_ctrl   = if d?.settings?.key?.START_HITAHINT_NEWTAB? then d.settings.key.START_HITAHINT_NEWTAB.CTRL else DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CTRL
+    hitahint_start_newtab_alt    = if d?.settings?.key?.START_HITAHINT_NEWTAB? then d.settings.key.START_HITAHINT_NEWTAB.ALT  else DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT
     tab_select_start_code = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CODE else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
     tab_select_start_ctrl = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.CTRL else DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
     tab_select_start_alt  = if d?.settings?.key?.TOGGLE_SELECTOR? then d.settings.key.TOGGLE_SELECTOR.ALT  else DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
@@ -28,6 +31,10 @@ restoreSettings =->
     $('#hitahint_start_code').val(hitahint_start_code)
     $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl)
     $('#hitahint_start_alt').attr("checked", hitahint_start_alt)
+    $('#hitahint_start_newtab').val(KEYMAP[hitahint_start_newtab_code])
+    $('#hitahint_start_newtab_code').val(hitahint_start_newtab_code)
+    $('#hitahint_start_newtab_ctrl').attr("checked", hitahint_start_newtab_ctrl)
+    $('#hitahint_start_newtab_alt').attr("checked", hitahint_start_newtab_alt)
     $('#tab_select_start').val(KEYMAP[tab_select_start_code])
     $('#tab_select_start_code').val(tab_select_start_code)
     $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl)
@@ -66,6 +73,10 @@ saveSettings =->
         CODE: parseInt($('#hitahint_start_code').val()) ? DEFAULT_SETTINGS.START_HITAHINT.CODE
         CTRL: $('#hitahint_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.START_HITAHINT.CTRL
         ALT:  $('#hitahint_start_alt').is(':checked')   ? DEFAULT_SETTINGS.START_HITAHINT.ALT
+      'START_HITAHINT_NEWTAB':
+        CODE: parseInt($('#hitahint_start_newtab_code').val()) ? DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CODE
+        CTRL: $('#hitahint_start_newtab_ctrl').is(':checked')  ? DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CTRL
+        ALT:  $('#hitahint_start_newtab_alt').is(':checked')   ? DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT
       'TOGGLE_SELECTOR':
         CODE: parseInt($('#tab_select_start_code').val()) ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE
         CTRL: $('#tab_select_start_ctrl').is(':checked')  ? DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL
@@ -96,7 +107,7 @@ $(->
     return if not id
 
     switch id
-    case 'hitahint_start', 'tab_select_start', 'form_focus', 'cancel'
+    case 'hitahint_start', 'hitahint_start_newtab', 'tab_select_start', 'form_focus', 'cancel'
       if e.keyCode in AVAILABLE_KEYCODES
         e.preventDefault()
         keyName = KEYMAP[e.keyCode]
