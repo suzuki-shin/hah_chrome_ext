@@ -1,4 +1,4 @@
-var CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, isFocusingForm, HitAHintMode;
+var CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, HitAHintMode;
 CLICKABLES = 'a';
 _HINT_KEYS = {
   65: 'A',
@@ -68,13 +68,6 @@ isHitAHintKey = function(keyCode){
     }
     return results$;
   }())) !== -1;
-};
-isFocusingForm = function(){
-  var focusElems;
-  log('isFocusingForm');
-  focusElems = $(':focus');
-  log(focusElems.attr('type'));
-  return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
 };
 HitAHintMode = (function(){
   HitAHintMode.displayName = 'HitAHintMode';

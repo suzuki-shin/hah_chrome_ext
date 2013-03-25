@@ -1,4 +1,4 @@
-var ITEM_TYPE_OF, DEFAULT_SELECTOR_NUM, Main;
+var ITEM_TYPE_OF, DEFAULT_SELECTOR_NUM, isFocusingForm, Main;
 ITEM_TYPE_OF = {
   tab: 'TAB',
   history: 'HIS',
@@ -7,6 +7,13 @@ ITEM_TYPE_OF = {
   command: 'COM'
 };
 DEFAULT_SELECTOR_NUM = 20;
+isFocusingForm = function(){
+  var focusElems;
+  log('isFocusingForm');
+  focusElems = $(':focus');
+  log(focusElems.attr('type'));
+  return focusElems[0] && ((focusElems[0].nodeName.toLowerCase() === "input" && focusElems.attr('type') === "text") || focusElems[0].nodeName.toLowerCase() === "textarea");
+};
 Main = (function(){
   Main.displayName = 'Main';
   var prototype = Main.prototype, constructor = Main;

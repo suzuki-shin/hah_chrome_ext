@@ -21,17 +21,6 @@ indexToKeyCode = (index) -> [k for k,v of HINT_KEYS][index]
 isHitAHintKey = (keyCode) ->
   $.inArray(String(keyCode), [k for k,v of _HINT_KEYS]) isnt -1
 
-# 現在フォーカスがある要素がtextタイプのinputかtextareaである(文字入力可能なformの要素)かどうかを返す
-# isFocusingForm :: Bool
-isFocusingForm =->
-  log('isFocusingForm')
-  focusElems = $(':focus')
-  log(focusElems.attr('type'))
-  focusElems[0] and (
-    (focusElems[0].nodeName.toLowerCase() == "input" and focusElems.attr('type') == "text") or
-    focusElems[0].nodeName.toLowerCase() == "textarea"
-  )
-
 class HitAHintMode
   @keydownMap = (e, keyMapper) ->
     log('mode: ' + Main.mode)

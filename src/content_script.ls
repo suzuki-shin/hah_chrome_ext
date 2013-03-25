@@ -1,6 +1,17 @@
 ITEM_TYPE_OF = {tab: 'TAB', history: 'HIS', bookmark: 'BKM', websearch: 'WEB', command: 'COM'}
 DEFAULT_SELECTOR_NUM = 20
 
+# 現在フォーカスがある要素がtextタイプのinputかtextareaである(文字入力可能なformの要素)かどうかを返す
+# isFocusingForm :: Bool
+isFocusingForm =->
+  log('isFocusingForm')
+  focusElems = $(':focus')
+  log(focusElems.attr('type'))
+  focusElems[0] and (
+    (focusElems[0].nodeName.toLowerCase() == "input" and focusElems.attr('type') == "text") or
+    focusElems[0].nodeName.toLowerCase() == "textarea"
+  )
+
 class Main
 
 Main.start = (keyMapper, makeSelectorConsole, searchList) ->
