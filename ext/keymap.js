@@ -1,4 +1,7 @@
-var KEYMAP, DEFAULT_SETTINGS, keyCodeFromKeyName;
+var p, CTRL_KEYCODE, ALT_KEYCODE, KEYMAP, DEFAULT_SETTINGS, keyCodeFromKeyName;
+p = prelude;
+CTRL_KEYCODE = 17;
+ALT_KEYCODE = 18;
 KEYMAP = {
   9: 'TAB',
   16: 'SHIFT',

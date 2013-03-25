@@ -1,3 +1,8 @@
+p = prelude
+
+CTRL_KEYCODE = 17
+ALT_KEYCODE = 18
+
 KEYMAP =
   9   : 'TAB'
   16  : 'SHIFT'
