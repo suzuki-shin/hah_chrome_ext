@@ -1,5 +1,6 @@
 <html>
   <head>
+	<meta charset="UTF-8">
     <title>hah options page</title>
     <link rel="stylesheet" href="options.css" type="text/css" charset="utf-8">
 <!--     <script type="text/javascript" src="prelude.min.js"></script> -->
@@ -9,7 +10,7 @@
     <h1>hah options page</h1>
     <table>
       <tr>
-        <th>hit a hint start:</th>
+        <th>hit a hint開始:</th>
         <td>
           <input type="text" id="hitahint_start" size="7" />
           <input type="hidden" id="hitahint_start_code" />
@@ -20,7 +21,7 @@
         </td>
       </tr>
       <tr>
-        <th>hit a hint start:</th>
+        <th>hit a hint(新規タブ)開始:</th>
         <td>
           <input type="text" id="hitahint_start_newtab" size="7" />
           <input type="hidden" id="hitahint_start_newtab_code" />
@@ -31,7 +32,7 @@
         </td>
       </tr>
       <tr>
-        <th>tab selector start:</th>
+        <th>tab selector開始:</th>
         <td>
           <input type="text" id="tab_select_start" size="7" />
           <input type="hidden" id="tab_select_start_code" />
@@ -41,36 +42,25 @@
           alt: <input type="checkbox" checked="" id="tab_select_start_alt" />
         </td>
       </tr>
+<!--       <tr> -->
+<!--         <th>form focus:</th> -->
+<!--         <td> -->
+<!--           <input type="text" id="form_focus" size="7" /> -->
+<!--           <input type="hidden" id="form_focus_code" /> -->
+<!--         </td> -->
+<!--         <td> -->
+<!--           ctrl: <input type="checkbox" checked="" id="form_focus_ctrl" /> -->
+<!--           alt: <input type="checkbox" checked="" id="form_focus_alt" /> -->
+<!--         </td> -->
+<!--       </tr> -->
       <tr>
-        <th>form focus:</th>
-        <td>
-          <input type="text" id="form_focus" size="7" />
-          <input type="hidden" id="form_focus_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="form_focus_ctrl" />
-          alt: <input type="checkbox" checked="" id="form_focus_alt" />
-        </td>
-      </tr>
-      <tr>
-        <th>cancel:</th>
-        <td>
-          <input type="text" id="cancel" size="7" />
-          <input type="hidden" id="cancel_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="cancel_ctrl" />
-          alt: <input type="checkbox" checked="" id="cancel_alt" />
-        </td>
-      </tr>
-      <tr>
-        <th>selector num:</th>
+        <th>tab selector数:</th>
         <td>
           <input type="text" id="selector_num" size="7" />
         </td>
       </tr>
       <tr>
-        <th>search list:</th>
+        <th>tab selector 検索リスト:</th>
         <td>
           <input type="text" id="search_name0" size="30" /><br/>
           <input type="text" id="search_name1" size="30" /><br/>
@@ -86,8 +76,19 @@
           <input type="text" id="search_url4" size="100" /><br/>
         </td>
       </tr>
+      <tr>
+        <th>cancel:</th>
+        <td>
+          <input type="text" id="cancel" size="7" />
+          <input type="hidden" id="cancel_code" />
+        </td>
+        <td>
+          ctrl: <input type="checkbox" checked="" id="cancel_ctrl" />
+          alt: <input type="checkbox" checked="" id="cancel_alt" />
+        </td>
+      </tr>
     </table>
-    <button id="save_options">save options</button>
+    <button id="save_options">設定を保存する</button>
 
     <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
     <script type="text/javascript" src="prelude.min.js"></script>
