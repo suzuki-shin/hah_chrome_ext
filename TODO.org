@@ -1,4 +1,5 @@
 * TODO
+- [ ] google analytics入れる
 - [ ] changelogつける(chromeウェブストアに)
 - [ ] モードが変わったときにnotifyだすようにする
 - [ ] 除外urlを自分で設定できるようにする
