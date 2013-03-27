@@ -1,5 +1,5 @@
 var CLICKABLES, _HINT_KEYS, HINT_KEYS, k1, v1, k2, v2, keyCodeToIndex, indexToKeyCode, isHitAHintKey, HitAHintMode;
-CLICKABLES = "a[href],input:not([type=hidden]),textarea,select,*[onclick],button";
+CLICKABLES = "a[href],input:not([type=hidden]),select,*[onclick],button";
 _HINT_KEYS = {
   65: 'A',
   66: 'B',
