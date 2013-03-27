@@ -30,7 +30,7 @@ class HitAHintMode
 
     return if Main.changeModKey(on, e.keyCode)
 
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)
     case 'CANCEL' then @@cancel(e)
     default
       if isHitAHintKey(e.keyCode) then @@hitHintKey(e)

@@ -9,7 +9,7 @@ class SelectorMode
 
     return if Main.changeModKey(on, e.keyCode)
 
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)
     case 'MOVE_NEXT_SELECTOR_CURSOR' then @@moveNextCursor(e)
     case 'MOVE_PREV_SELECTOR_CURSOR' then @@movePrevCursor(e)
     case 'CANCEL'                    then @@cancel(e)

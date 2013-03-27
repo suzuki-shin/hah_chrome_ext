@@ -82,7 +82,7 @@ Main.start = function(keyMapper, makeSelectorConsole, searchList){
 chrome.storage.sync.get('settings', function(d){
   var keyMapper, selector_num, ref$, ref1$, ref2$, searchList, makeSelectorConsole;
   log(d);
-  keyMapper = function(keyCode, ctrl, alt){
+  keyMapper = function(keyCode, ctrl, alt, shift){
     var KEY, k, v;
     KEY = DEFAULT_SETTINGS;
     if (d.settings.key) {
@@ -94,7 +94,7 @@ chrome.storage.sync.get('settings', function(d){
       var ref$, results$ = [];
       for (k in ref$ = KEY) {
         v = ref$[k];
-        if (v.CODE === keyCode && v.CTRL === ctrl && v.ALT === alt) {
+        if (v.CODE === keyCode && v.CTRL === ctrl && v.ALT === alt && v.SHIFT === shift) {
           results$.push(k);
         }
       }

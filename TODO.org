@@ -1,6 +1,6 @@
 * TODO
 - [X] altのキーがきいていないっぽいのを調査して修正する
-- [ ] shiftキーもいれる
+- [X] shiftキーもいれる
 - [ ] google analytics入れる
 - [ ] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
 - [X] changelogつける(chromeウェブストアに)

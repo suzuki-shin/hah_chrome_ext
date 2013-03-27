@@ -8,7 +8,7 @@ class NeutralMode
 
     return if Main.changeModKey(on, e.keyCode)
 
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)
     case 'START_HITAHINT'        then @@startHah()
     case 'START_HITAHINT_NEWTAB' then @@startHahNewTab()
     case 'FOCUS_FORM'            then @@focusForm(e)

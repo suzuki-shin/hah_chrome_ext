@@ -19,7 +19,7 @@ class FormFocusMode
 
     return if Main.changeModKey(off, e.keyCode)
 
-    switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
+    switch keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)
     case 'MOVE_NEXT_FORM' then @@focusNextForm(e)
     case 'MOVE_PREV_FORM' then @@focusPrevForm(e)
     case 'CANCEL'         then @@cancel(e)

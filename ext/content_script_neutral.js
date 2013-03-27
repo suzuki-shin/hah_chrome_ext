@@ -15,7 +15,7 @@ NeutralMode = (function(){
     if (Main.changeModKey(true, e.keyCode)) {
       return;
     }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)) {
     case 'START_HITAHINT':
       return constructor.startHah();
     case 'START_HITAHINT_NEWTAB':

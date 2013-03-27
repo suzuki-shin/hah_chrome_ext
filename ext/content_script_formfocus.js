@@ -31,7 +31,7 @@ FormFocusMode = (function(){
     if (Main.changeModKey(false, e.keyCode)) {
       return;
     }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)) {
     case 'MOVE_NEXT_FORM':
       return constructor.focusNextForm(e);
     case 'MOVE_PREV_FORM':

@@ -22,7 +22,7 @@ SelectorMode = (function(){
     if (Main.changeModKey(true, e.keyCode)) {
       return;
     }
-    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
+    switch (keyMapper(e.keyCode, Main.ctrl, Main.alt, Main.shift)) {
     case 'MOVE_NEXT_SELECTOR_CURSOR':
       return constructor.moveNextCursor(e);
     case 'MOVE_PREV_SELECTOR_CURSOR':
