@@ -1,8 +1,5 @@
 p = prelude
 
-CTRL_KEYCODE = 17
-ALT_KEYCODE = 18
-
 KEYMAP =
   9   : 'TAB'
   16  : 'SHIFT'
@@ -72,16 +69,16 @@ KEYMAP =
   190 : '.'
 
 DEFAULT_SETTINGS =
-  'START_HITAHINT':            {CODE: 82,  CTRL: on,  ALT: off} # Ctrl+r
-  'START_HITAHINT_NEWTAB':     {CODE: 84,  CTRL: on,  ALT: off } # Ctrl+t
-  'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off} # Ctrl+f
-  'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off} # Ctrl+;
-  'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off} # ESC
-  'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off} # down
-  'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off} # up
-  'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off} # pageup
-  'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off} # pagedown
-  'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off} # Ctrl+h
+  'START_HITAHINT':            {CODE: 82,  CTRL: on,  ALT: off, SHIFT: off} # Ctrl+r
+  'START_HITAHINT_NEWTAB':     {CODE: 84,  CTRL: on,  ALT: off, SHIFT: off} # Ctrl+t
+  'FOCUS_FORM':                {CODE: 70,  CTRL: on,  ALT: off, SHIFT: off} # Ctrl+f
+  'TOGGLE_SELECTOR':           {CODE: 186, CTRL: on,  ALT: off, SHIFT: off} # Ctrl+;
+  'CANCEL':                    {CODE: 27,  CTRL: off, ALT: off, SHIFT: off} # ESC
+  'MOVE_NEXT_SELECTOR_CURSOR': {CODE: 40,  CTRL: off, ALT: off, SHIFT: off} # down
+  'MOVE_PREV_SELECTOR_CURSOR': {CODE: 38,  CTRL: off, ALT: off, SHIFT: off} # up
+  'MOVE_NEXT_FORM':            {CODE: 34,  CTRL: off, ALT: off, SHIFT: off} # pageup
+  'MOVE_PREV_FORM':            {CODE: 33,  CTRL: off, ALT: off, SHIFT: off} # pagedown
+  'BACK_HISTORY':              {CODE: 72,  CTRL: on,  ALT: off, SHIFT: off} # Ctrl+h
   'SELECTOR':                  {NUM: 20}
 
 keyCodeFromKeyName = (name) ->

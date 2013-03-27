@@ -4,7 +4,7 @@ class NeutralMode
     log('mode: ' + Main.mode)
     log('keyCode: ' + e.keyCode)
     log('Ctrl: ' + Main.ctrl)
-    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt, SHIFT: Main.shift})
 
     return if Main.changeModKey(on, e.keyCode)
 
@@ -22,7 +22,7 @@ class NeutralMode
     log('mode: ' + Main.mode)
     log('keyCode: ' + e.keyCode)
     log('Ctrl: ' + Main.ctrl)
-    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
+    log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt, SHIFT: Main.shift})
 
     return if Main.changeModKey(off, e.keyCode)
 

@@ -18,9 +18,12 @@ Main = (function(){
   Main.displayName = 'Main';
   var prototype = Main.prototype, constructor = Main;
   constructor.changeModKey = function(status, keyCode){
-    log('Main.changeModKey');
-    log(keyCode);
-    if (keyCode !== CTRL_KEYCODE && keyCode !== ALT_KEYCODE) {
+    var CTRL_KEYCODE, ALT_KEYCODE, SHIFT_KEYCODE, modKeys;
+    CTRL_KEYCODE = 17;
+    ALT_KEYCODE = 18;
+    SHIFT_KEYCODE = 16;
+    modKeys = [CTRL_KEYCODE, ALT_KEYCODE, SHIFT_KEYCODE];
+    if (!in$(keyCode, modKeys)) {
       log('(not CTRL_KEYCODE) and (not ALT_KEYCODE)');
       return false;
     }
@@ -32,6 +35,10 @@ Main = (function(){
       log('ALT_KEYCODE');
       constructor.alt = status;
     }
+    if (keyCode === SHIFT_KEYCODE) {
+      log('SHIFT_KEYCODE');
+      constructor.shift = status;
+    }
     return true;
   };
   function Main(){}
@@ -40,6 +47,7 @@ Main = (function(){
 Main.start = function(keyMapper, makeSelectorConsole, searchList){
   Main.ctrl = false;
   Main.alt = false;
+  Main.shift = false;
   Main.mode = NeutralMode;
   $(document).keyup(function(e){
     return Main.mode.keyupMap(e, keyMapper, makeSelectorConsole, searchList);
@@ -117,6 +125,11 @@ chrome.storage.sync.get('settings', function(d){
   };
   return Main.start(keyMapper, makeSelectorConsole, searchList);
 });
+function in$(x, arr){
+  var i = -1, l = arr.length >>> 0;
+  while (++i < l) if (x === arr[i] && i in arr) return true;
+  return false;
+}
 function import$(obj, src){
   var own = {}.hasOwnProperty;
   for (var key in src) if (own.call(src, key)) obj[key] = src[key];

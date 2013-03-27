@@ -1,6 +1,8 @@
 ITEM_TYPE_OF = {tab: 'TAB', history: 'HIS', bookmark: 'BKM', websearch: 'WEB', command: 'COM'}
 DEFAULT_SELECTOR_NUM = 20
 
+
+
 # 現在フォーカスがある要素がtextタイプのinputかtextareaである(文字入力可能なformの要素)かどうかを返す
 # isFocusingForm :: Bool
 isFocusingForm =->
@@ -14,10 +16,16 @@ isFocusingForm =->
 
 class Main
   @@changeModKey = (status, keyCode) ->
-    log('Main.changeModKey')
-    log(keyCode)
+    CTRL_KEYCODE  = 17
+    ALT_KEYCODE   = 18
+    SHIFT_KEYCODE = 16
 
-    if keyCode isnt CTRL_KEYCODE and keyCode isnt ALT_KEYCODE
+    modKeys =
+      CTRL_KEYCODE
+      ALT_KEYCODE
+      SHIFT_KEYCODE
+
+    if not (keyCode in modKeys)
       log('(not CTRL_KEYCODE) and (not ALT_KEYCODE)')
       return false
 
@@ -29,13 +37,18 @@ class Main
       log('ALT_KEYCODE')
       @@alt = status
 
+    if keyCode is SHIFT_KEYCODE
+      log('SHIFT_KEYCODE')
+      @@shift = status
+
     true
 
 
 Main.start = (keyMapper, makeSelectorConsole, searchList) ->
-  Main.ctrl = off
-  Main.alt = off
-  Main.mode = NeutralMode
+  Main.ctrl  = off
+  Main.alt   = off
+  Main.shift = off
+  Main.mode  = NeutralMode
 
   $(document).keyup((e) -> Main.mode.keyupMap(e, keyMapper, makeSelectorConsole, searchList))
   $(document).keydown((e) -> Main.mode.keydownMap(e, keyMapper))

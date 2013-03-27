@@ -79,7 +79,8 @@ HitAHintMode = (function(){
     log({
       CODE: e.keyCode,
       CTRL: Main.ctrl,
-      ALT: Main.alt
+      ALT: Main.alt,
+      SHIFT: Main.shift
     });
     if (Main.changeModKey(true, e.keyCode)) {
       return;
@@ -100,7 +101,8 @@ HitAHintMode = (function(){
     log({
       CODE: e.keyCode,
       CTRL: Main.ctrl,
-      ALT: Main.alt
+      ALT: Main.alt,
+      SHIFT: Main.shift
     });
     if (Main.changeModKey(false, e.keyCode)) {
       return;

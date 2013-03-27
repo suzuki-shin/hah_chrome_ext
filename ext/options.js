@@ -10,7 +10,7 @@ for (k in ref$ = KEYMAP) {
 AVAILABLE_KEYCODES = res$;
 restoreSettings = function(){
   return chrome.storage.sync.get('settings', function(d){
-    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, hitahint_start_newtab_code, hitahint_start_newtab_ctrl, hitahint_start_newtab_alt, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, form_focus_code, form_focus_ctrl, form_focus_alt, cancel_code, cancel_ctrl, cancel_alt, selector_num, search_list, i$, len$, i, s, results$ = [];
+    var hitahint_start_code, ref$, ref1$, hitahint_start_ctrl, hitahint_start_alt, hitahint_start_shift, hitahint_start_newtab_code, hitahint_start_newtab_ctrl, hitahint_start_newtab_alt, hitahint_start_newtab_shift, tab_select_start_code, tab_select_start_ctrl, tab_select_start_alt, tab_select_start_shift, form_focus_code, form_focus_ctrl, form_focus_alt, form_focus_shift, cancel_code, cancel_ctrl, cancel_alt, cancel_shift, selector_num, search_list, i$, len$, i, s, results$ = [];
     console.log('sync.get');
     console.log(d);
     hitahint_start_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
@@ -22,6 +22,9 @@ restoreSettings = function(){
     hitahint_start_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
       ? d.settings.key.START_HITAHINT.ALT
       : DEFAULT_SETTINGS.START_HITAHINT.ALT;
+    hitahint_start_shift = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT : void 8 : void 8 : void 8) != null
+      ? d.settings.key.START_HITAHINT.SHIFT
+      : DEFAULT_SETTINGS.START_HITAHINT.SHIFT;
     hitahint_start_newtab_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
       ? d.settings.key.START_HITAHINT_NEWTAB.CODE
       : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CODE;
@@ -31,6 +34,9 @@ restoreSettings = function(){
     hitahint_start_newtab_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
       ? d.settings.key.START_HITAHINT_NEWTAB.ALT
       : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT;
+    hitahint_start_newtab_shift = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.START_HITAHINT_NEWTAB : void 8 : void 8 : void 8) != null
+      ? d.settings.key.START_HITAHINT_NEWTAB.SHIFT
+      : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.SHIFT;
     tab_select_start_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.TOGGLE_SELECTOR : void 8 : void 8 : void 8) != null
       ? d.settings.key.TOGGLE_SELECTOR.CODE
       : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CODE;
@@ -40,6 +46,9 @@ restoreSettings = function(){
     tab_select_start_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.TOGGLE_SELECTOR : void 8 : void 8 : void 8) != null
       ? d.settings.key.TOGGLE_SELECTOR.ALT
       : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT;
+    tab_select_start_shift = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.TOGGLE_SELECTOR : void 8 : void 8 : void 8) != null
+      ? d.settings.key.TOGGLE_SELECTOR.SHIFT
+      : DEFAULT_SETTINGS.TOGGLE_SELECTOR.SHIFT;
     form_focus_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
       ? d.settings.key.FOCUS_FORM.CODE
       : DEFAULT_SETTINGS.FOCUS_FORM.CODE;
@@ -49,6 +58,9 @@ restoreSettings = function(){
     form_focus_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
       ? d.settings.key.FOCUS_FORM.ALT
       : DEFAULT_SETTINGS.FOCUS_FORM.ALT;
+    form_focus_shift = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.FOCUS_FORM : void 8 : void 8 : void 8) != null
+      ? d.settings.key.FOCUS_FORM.SHIFT
+      : DEFAULT_SETTINGS.FOCUS_FORM.SHIFT;
     cancel_code = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.CANCEL : void 8 : void 8 : void 8) != null
       ? d.settings.key.CANCEL.CODE
       : DEFAULT_SETTINGS.CANCEL.CODE;
@@ -58,6 +70,9 @@ restoreSettings = function(){
     cancel_alt = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.CANCEL : void 8 : void 8 : void 8) != null
       ? d.settings.key.CANCEL.ALT
       : DEFAULT_SETTINGS.CANCEL.ALT;
+    cancel_shift = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.key) != null ? ref1$.CANCEL : void 8 : void 8 : void 8) != null
+      ? d.settings.key.CANCEL.SHIFT
+      : DEFAULT_SETTINGS.CANCEL.SHIFT;
     selector_num = (d != null ? (ref$ = d.settings) != null ? (ref1$ = ref$.selector) != null ? ref1$.NUM : void 8 : void 8 : void 8) != null
       ? d.settings.selector.NUM
       : DEFAULT_SETTINGS.SELECTOR.NUM;
@@ -66,22 +81,27 @@ restoreSettings = function(){
     $('#hitahint_start_code').val(hitahint_start_code);
     $('#hitahint_start_ctrl').attr("checked", hitahint_start_ctrl);
     $('#hitahint_start_alt').attr("checked", hitahint_start_alt);
+    $('#hitahint_start_shift').attr("checked", hitahint_start_shift);
     $('#hitahint_start_newtab').val(KEYMAP[hitahint_start_newtab_code]);
     $('#hitahint_start_newtab_code').val(hitahint_start_newtab_code);
     $('#hitahint_start_newtab_ctrl').attr("checked", hitahint_start_newtab_ctrl);
     $('#hitahint_start_newtab_alt').attr("checked", hitahint_start_newtab_alt);
+    $('#hitahint_start_newtab_shift').attr("checked", hitahint_start_newtab_shift);
     $('#tab_select_start').val(KEYMAP[tab_select_start_code]);
     $('#tab_select_start_code').val(tab_select_start_code);
     $('#tab_select_start_ctrl').attr("checked", tab_select_start_ctrl);
     $('#tab_select_start_alt').attr("checked", tab_select_start_alt);
+    $('#tab_select_start_shift').attr("checked", tab_select_start_shift);
     $('#form_focus').val(KEYMAP[form_focus_code]);
     $('#form_focus_code').val(form_focus_code);
     $('#form_focus_ctrl').attr("checked", form_focus_ctrl);
     $('#form_focus_alt').attr("checked", form_focus_alt);
+    $('#form_focus_shift').attr("checked", form_focus_shift);
     $('#cancel').val(KEYMAP[cancel_code]);
     $('#cancel_code').val(cancel_code);
     $('#cancel_ctrl').attr("checked", cancel_ctrl);
     $('#cancel_alt').attr("checked", cancel_alt);
+    $('#cancel_shift').attr("checked", cancel_shift);
     $('#selector_num').val(selector_num);
     for (i$ = 0, len$ = search_list.length; i$ < len$; ++i$) {
       i = i$;
@@ -130,7 +150,10 @@ saveSettings = function(){
           : DEFAULT_SETTINGS.START_HITAHINT.CTRL,
         ALT: (ref$ = $('#hitahint_start_alt').is(':checked')) != null
           ? ref$
-          : DEFAULT_SETTINGS.START_HITAHINT.ALT
+          : DEFAULT_SETTINGS.START_HITAHINT.ALT,
+        SHIFT: (ref$ = $('#hitahint_start_shift').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.START_HITAHINT.SHIFT
       },
       'START_HITAHINT_NEWTAB': {
         CODE: (ref$ = parseInt($('#hitahint_start_newtab_code').val())) != null
@@ -141,7 +164,10 @@ saveSettings = function(){
           : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.CTRL,
         ALT: (ref$ = $('#hitahint_start_newtab_alt').is(':checked')) != null
           ? ref$
-          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT
+          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.ALT,
+        SHIFT: (ref$ = $('#hitahint_start_newtab_shift').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.START_HITAHINT_NEWTAB.SHIFT
       },
       'TOGGLE_SELECTOR': {
         CODE: (ref$ = parseInt($('#tab_select_start_code').val())) != null
@@ -152,7 +178,10 @@ saveSettings = function(){
           : DEFAULT_SETTINGS.TOGGLE_SELECTOR.CTRL,
         ALT: (ref$ = $('#tab_select_start_alt').is(':checked')) != null
           ? ref$
-          : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT
+          : DEFAULT_SETTINGS.TOGGLE_SELECTOR.ALT,
+        SHIFT: (ref$ = $('#tab_select_start_shift').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.TOGGLE_SELECTOR.SHIFT
       },
       'FOCUS_FORM': {
         CODE: (ref$ = parseInt($('#form_focus_code').val())) != null
@@ -163,7 +192,10 @@ saveSettings = function(){
           : DEFAULT_SETTINGS.FOCUS_FORM.CTRL,
         ALT: (ref$ = $('#form_focus_alt').is(':checked')) != null
           ? ref$
-          : DEFAULT_SETTINGS.FOCUS_FORM.ALT
+          : DEFAULT_SETTINGS.FOCUS_FORM.ALT,
+        SHIFT: (ref$ = $('#form_focus_shift').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.FOCUS_FORM.SHIFT
       },
       'CANCEL': {
         CODE: (ref$ = parseInt($('#cancel_code').val())) != null
@@ -174,7 +206,10 @@ saveSettings = function(){
           : DEFAULT_SETTINGS.CANCEL.CTRL,
         ALT: (ref$ = $('#cancel_alt').is(':checked')) != null
           ? ref$
-          : DEFAULT_SETTINGS.CANCEL.ALT
+          : DEFAULT_SETTINGS.CANCEL.ALT,
+        SHIFT: (ref$ = $('#cancel_shift').is(':checked')) != null
+          ? ref$
+          : DEFAULT_SETTINGS.CANCEL.SHIFT
       }
     },
     selector: {

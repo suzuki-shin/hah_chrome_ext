@@ -1,7 +1,5 @@
-var p, CTRL_KEYCODE, ALT_KEYCODE, KEYMAP, DEFAULT_SETTINGS, keyCodeFromKeyName;
+var p, KEYMAP, DEFAULT_SETTINGS, keyCodeFromKeyName;
 p = prelude;
-CTRL_KEYCODE = 17;
-ALT_KEYCODE = 18;
 KEYMAP = {
   9: 'TAB',
   16: 'SHIFT',
@@ -74,52 +72,62 @@ DEFAULT_SETTINGS = {
   'START_HITAHINT': {
     CODE: 82,
     CTRL: true,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'START_HITAHINT_NEWTAB': {
     CODE: 84,
     CTRL: true,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'FOCUS_FORM': {
     CODE: 70,
     CTRL: true,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'TOGGLE_SELECTOR': {
     CODE: 186,
     CTRL: true,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'CANCEL': {
     CODE: 27,
     CTRL: false,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'MOVE_NEXT_SELECTOR_CURSOR': {
     CODE: 40,
     CTRL: false,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'MOVE_PREV_SELECTOR_CURSOR': {
     CODE: 38,
     CTRL: false,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'MOVE_NEXT_FORM': {
     CODE: 34,
     CTRL: false,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'MOVE_PREV_FORM': {
     CODE: 33,
     CTRL: false,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'BACK_HISTORY': {
     CODE: 72,
     CTRL: true,
-    ALT: false
+    ALT: false,
+    SHIFT: false
   },
   'SELECTOR': {
     NUM: 20
