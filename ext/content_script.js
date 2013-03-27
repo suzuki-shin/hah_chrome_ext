@@ -17,6 +17,23 @@ isFocusingForm = function(){
 Main = (function(){
   Main.displayName = 'Main';
   var prototype = Main.prototype, constructor = Main;
+  constructor.changeModKey = function(status, keyCode){
+    log('Main.changeModKey');
+    log(keyCode);
+    if (keyCode !== CTRL_KEYCODE && keyCode !== ALT_KEYCODE) {
+      log('(not CTRL_KEYCODE) and (not ALT_KEYCODE)');
+      return false;
+    }
+    if (keyCode === CTRL_KEYCODE) {
+      log('CTRL_KEYCODE');
+      constructor.ctrl = status;
+    }
+    if (keyCode === ALT_KEYCODE) {
+      log('ALT_KEYCODE');
+      constructor.alt = status;
+    }
+    return true;
+  };
   function Main(){}
   return Main;
 }());

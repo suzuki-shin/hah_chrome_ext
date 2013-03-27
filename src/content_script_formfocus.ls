@@ -8,9 +8,7 @@ class FormFocusMode
     log('Ctrl: ' + Main.ctrl)
     log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
 
-    if e.keyCode is CTRL_KEYCODE
-      Main.ctrl = on
-      return
+    return if Main.changeModKey(on, e.keyCode)
     log('keydownMap')
 
   @keyupMap = (e, keyMapper, makeSelectorConsole, _) ->
@@ -19,9 +17,7 @@ class FormFocusMode
     log('Ctrl: ' + Main.ctrl)
     log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
 
-    if e.keyCode is CTRL_KEYCODE
-      Main.ctrl = off
-      return
+    return if Main.changeModKey(off, e.keyCode)
 
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
     case 'MOVE_NEXT_FORM' then @@focusNextForm(e)

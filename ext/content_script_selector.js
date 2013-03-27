@@ -18,8 +18,7 @@ SelectorMode = (function(){
       CTRL: Main.ctrl,
       ALT: Main.alt
     });
-    if (e.keyCode === CTRL_KEYCODE) {
-      Main.ctrl = true;
+    if (Main.changeModKey(true, e.keyCode)) {
       return;
     }
     switch (keyMapper(e.keyCode, Main.ctrl, Main.alt)) {
@@ -44,8 +43,7 @@ SelectorMode = (function(){
       CTRL: Main.ctrl,
       ALT: Main.alt
     });
-    if (e.keyCode === CTRL_KEYCODE) {
-      Main.ctrl = false;
+    if (Main.changeModKey(false, e.keyCode)) {
       return;
     }
     return constructor.filterSelector(e, makeSelectorConsole, searchList);

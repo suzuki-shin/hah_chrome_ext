@@ -1,4 +1,5 @@
 * TODO
+- [ ] altのキーがきいていないっぽいのを調査して修正する
 - [ ] google analytics入れる
 - [ ] changelogつける(chromeウェブストアに)
 - [ ] モードが変わったときにnotifyだすようにする

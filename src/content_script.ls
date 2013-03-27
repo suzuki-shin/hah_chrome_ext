@@ -13,6 +13,24 @@ isFocusingForm =->
   )
 
 class Main
+  @@changeModKey = (status, keyCode) ->
+    log('Main.changeModKey')
+    log(keyCode)
+
+    if keyCode isnt CTRL_KEYCODE and keyCode isnt ALT_KEYCODE
+      log('(not CTRL_KEYCODE) and (not ALT_KEYCODE)')
+      return false
+
+    if keyCode is CTRL_KEYCODE
+      log('CTRL_KEYCODE')
+      @@ctrl = status
+
+    if keyCode is ALT_KEYCODE
+      log('ALT_KEYCODE')
+      @@alt = status
+
+    true
+
 
 Main.start = (keyMapper, makeSelectorConsole, searchList) ->
   Main.ctrl = off

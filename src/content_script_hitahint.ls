@@ -28,9 +28,7 @@ class HitAHintMode
     log('Ctrl: ' + Main.ctrl)
     log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
 
-    if e.keyCode is CTRL_KEYCODE
-      Main.ctrl = on
-      return
+    return if Main.changeModKey(on, e.keyCode)
 
     switch keyMapper(e.keyCode, Main.ctrl, Main.alt)
     case 'CANCEL' then @@cancel(e)
@@ -43,9 +41,7 @@ class HitAHintMode
     log('Ctrl: ' + Main.ctrl)
     log({CODE: e.keyCode, CTRL: Main.ctrl, ALT: Main.alt})
 
-    if e.keyCode is CTRL_KEYCODE
-      Main.ctrl = off
-      return
+    return if Main.changeModKey(off, e.keyCode)
 
   @firstKeyCode = null
 
