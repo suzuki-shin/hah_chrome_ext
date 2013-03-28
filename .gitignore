@@ -1,3 +1,4 @@
 jquery-1.9.0.min.js
 prelude.min.js
 *.zip
+.DS_Store

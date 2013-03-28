@@ -1,12 +1,10 @@
 * TODO
-- [X] altのキーがきいていないっぽいのを調査して修正する
-- [X] shiftキーもいれる
-- [ ] google analytics入れる
+- [ ] optionページのスタイルつける
 - [ ] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
-- [X] changelogつける(chromeウェブストアに)
+- [ ] option.lsのリファクタ
+- [ ] google analytics入れる
 - [ ] モードが変わったときにnotifyだすようにする
 - [ ] 除外urlを自分で設定できるようにする
-- [X] 別タブで開くオプションをつける
 - [ ] 別タブでバックグラウンド開くオプションをつける
 - [ ] アイコンをつけて、そこでON/OFFできるようにする
 - [ ] hitahintの1key目による表示の絞り込み(強調表示)
@@ -23,6 +21,10 @@
  - [ ] facebookのグループでコメントつけるときにだめだった
 - [ ] helpの表示機能つける
 - [ ] コマンドをいろいろつける
+- [X] altのキーがきいていないっぽいのを調査して修正する
+- [X] shiftキーもいれる
+- [X] changelogつける(chromeウェブストアに)
+- [X] 別タブで開くオプションをつける
 - [X] zip.shを
  - [X] manifest.jsonをみて$VERを勝手にいれるようにする
  - [X] config.jsのDEBUG_MODEをみて、falseじゃなければ警告をだすようにする

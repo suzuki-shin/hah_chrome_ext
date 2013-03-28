@@ -1,14 +1,17 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
   <head>
 	<meta charset="UTF-8">
     <title>hah options page</title>
+    <link rel="stylesheet" href="bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="options.css" type="text/css" charset="utf-8">
 <!--     <script type="text/javascript" src="prelude.min.js"></script> -->
     <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
   </head>
   <body>
+	<div id="contents" class="container-narrow">
     <h1>hah options page</h1>
-    <table>
+    <table class="table">
       <tr>
         <th>hit a hint開始:</th>
         <td>
@@ -93,12 +96,13 @@
         </td>
       </tr>
     </table>
-    <button id="save_options">設定を保存する</button>
+    <button id="save_options" class="btn btn-primary">設定を保存する</button>
 
     <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
     <script type="text/javascript" src="prelude.min.js"></script>
     <script type="text/javascript" src="keymap.js"></script>
     <script type="text/javascript" src="command_settings.js"></script>
     <script type="text/javascript" src="options.js"></script>
+	</div>
   </body>
 </html>
