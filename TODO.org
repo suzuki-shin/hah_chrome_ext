@@ -1,6 +1,6 @@
 * TODO
-- [ ] optionページのスタイルつける
-- [ ] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
+- [X] optionページのスタイルつける
+- [X] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
 - [ ] option.lsのリファクタ
 - [ ] google analytics入れる
 - [ ] モードが変わったときにnotifyだすようにする

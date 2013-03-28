@@ -112,8 +112,17 @@ saveSettings =->
   console.log(settings)
   chrome.storage.sync.set({'settings': settings}, ((e) -> console.log(e)))
 
+version =->
+  m = chrome.runtime.getManifest()
+  m.version
+
 $(->
   restoreSettings()
+
+#   version()
+#   $('#version').text("KK")
+  $('#version').text(version())
+
   $('#save_options').click(saveSettings)
 
   $(document).keydown((e) ->

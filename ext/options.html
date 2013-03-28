@@ -1,108 +1,112 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <title>hah options page</title>
     <link rel="stylesheet" href="bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="options.css" type="text/css" charset="utf-8">
-<!--     <script type="text/javascript" src="prelude.min.js"></script> -->
-    <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
   </head>
   <body>
-	<div id="contents" class="container-narrow">
-    <h1>hah options page</h1>
-    <table class="table">
-      <tr>
-        <th>hit a hint開始:</th>
-        <td>
-          <input type="text" id="hitahint_start" size="7" />
-          <input type="hidden" id="hitahint_start_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="hitahint_start_ctrl" />
-          alt: <input type="checkbox" checked="" id="hitahint_start_alt" />
-          shift: <input type="checkbox" checked="" id="hitahint_start_shift" />
-        </td>
-      </tr>
-      <tr>
-        <th>hit a hint(新規タブ)開始:</th>
-        <td>
-          <input type="text" id="hitahint_start_newtab" size="7" />
-          <input type="hidden" id="hitahint_start_newtab_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="hitahint_start_newtab_ctrl" />
-          alt: <input type="checkbox" checked="" id="hitahint_start_newtab_alt" />
-          shift: <input type="checkbox" checked="" id="hitahint_start_newtab_shift" />
-        </td>
-      </tr>
-      <tr>
-        <th>tab selector開始:</th>
-        <td>
-          <input type="text" id="tab_select_start" size="7" />
-          <input type="hidden" id="tab_select_start_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="tab_select_start_ctrl" />
-          alt: <input type="checkbox" checked="" id="tab_select_start_alt" />
-          shift: <input type="checkbox" checked="" id="tab_select_start_shift" />
-        </td>
-      </tr>
-<!--       <tr> -->
-<!--         <th>form focus:</th> -->
-<!--         <td> -->
-<!--           <input type="text" id="form_focus" size="7" /> -->
-<!--           <input type="hidden" id="form_focus_code" /> -->
-<!--         </td> -->
-<!--         <td> -->
-<!--           ctrl: <input type="checkbox" checked="" id="form_focus_ctrl" /> -->
-<!--           alt: <input type="checkbox" checked="" id="form_focus_alt" /> -->
-<!--           shift: <input type="checkbox" checked="" id="form_focus_shift" /> -->
-<!--         </td> -->
-<!--       </tr> -->
-      <tr>
-        <th>tab selector数:</th>
-        <td>
-          <input type="text" id="selector_num" size="7" />
-        </td>
-      </tr>
-      <tr>
-        <th>tab selector 検索リスト:</th>
-        <td>
-          <input type="text" id="search_name0" size="30" /><br/>
-          <input type="text" id="search_name1" size="30" /><br/>
-          <input type="text" id="search_name2" size="30" /><br/>
-          <input type="text" id="search_name3" size="30" /><br/>
-          <input type="text" id="search_name4" size="30" /><br/>
-        </td>
-        <td>
-          <input type="text" id="search_url0" size="100" /><br/>
-          <input type="text" id="search_url1" size="100" /><br/>
-          <input type="text" id="search_url2" size="100" /><br/>
-          <input type="text" id="search_url3" size="100" /><br/>
-          <input type="text" id="search_url4" size="100" /><br/>
-        </td>
-      </tr>
-      <tr>
-        <th>cancel:</th>
-        <td>
-          <input type="text" id="cancel" size="7" />
-          <input type="hidden" id="cancel_code" />
-        </td>
-        <td>
-          ctrl: <input type="checkbox" checked="" id="cancel_ctrl" />
-          alt: <input type="checkbox" checked="" id="cancel_alt" />
-          shift: <input type="checkbox" checked="" id="cancel_shift" />
-        </td>
-      </tr>
-    </table>
-    <button id="save_options" class="btn btn-primary">設定を保存する</button>
+    <div id="contents" class="container-narrow">
+      <h1 class="text-center">hah options page</h1>
 
-    <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
-    <script type="text/javascript" src="prelude.min.js"></script>
-    <script type="text/javascript" src="keymap.js"></script>
-    <script type="text/javascript" src="command_settings.js"></script>
-    <script type="text/javascript" src="options.js"></script>
-	</div>
+      <div class="text-right">
+        Ver <span id="version">xx.xx.xx</span><br/>
+        <a href="https://chrome.google.com/webstore/detail/hah/ikljpmlpcmlghjponhkhibgbfhjgjbki/details" target="_blank">更新履歴</a>
+      </div>
+
+      <table class="table">
+        <tr>
+          <th>hit a hint開始:</th>
+          <td>
+            <input type="text" id="hitahint_start" size="7" />
+            <input type="hidden" id="hitahint_start_code" />
+          </td>
+          <td>
+            ctrl: <input type="checkbox" checked="" id="hitahint_start_ctrl" />
+            alt: <input type="checkbox" checked="" id="hitahint_start_alt" />
+            shift: <input type="checkbox" checked="" id="hitahint_start_shift" />
+          </td>
+        </tr>
+        <tr>
+          <th>hit a hint(新規タブ)開始:</th>
+          <td>
+            <input type="text" id="hitahint_start_newtab" size="7" />
+            <input type="hidden" id="hitahint_start_newtab_code" />
+          </td>
+          <td>
+            ctrl: <input type="checkbox" checked="" id="hitahint_start_newtab_ctrl" />
+            alt: <input type="checkbox" checked="" id="hitahint_start_newtab_alt" />
+            shift: <input type="checkbox" checked="" id="hitahint_start_newtab_shift" />
+          </td>
+        </tr>
+        <tr>
+          <th>tab selector開始:</th>
+          <td>
+            <input type="text" id="tab_select_start" size="7" />
+            <input type="hidden" id="tab_select_start_code" />
+          </td>
+          <td>
+            ctrl: <input type="checkbox" checked="" id="tab_select_start_ctrl" />
+            alt: <input type="checkbox" checked="" id="tab_select_start_alt" />
+            shift: <input type="checkbox" checked="" id="tab_select_start_shift" />
+          </td>
+        </tr>
+        <!--       <tr> -->
+        <!--         <th>form focus:</th> -->
+        <!--         <td> -->
+        <!--           <input type="text" id="form_focus" size="7" /> -->
+        <!--           <input type="hidden" id="form_focus_code" /> -->
+        <!--         </td> -->
+        <!--         <td> -->
+        <!--           ctrl: <input type="checkbox" checked="" id="form_focus_ctrl" /> -->
+        <!--           alt: <input type="checkbox" checked="" id="form_focus_alt" /> -->
+        <!--           shift: <input type="checkbox" checked="" id="form_focus_shift" /> -->
+        <!--         </td> -->
+        <!--       </tr> -->
+        <tr>
+          <th>tab selector数:</th>
+          <td>
+            <input type="text" id="selector_num" size="7" />
+          </td>
+        </tr>
+        <tr>
+          <th>tab selector 検索リスト:</th>
+          <td>
+            <input type="text" id="search_name0" size="30" /><br/>
+            <input type="text" id="search_name1" size="30" /><br/>
+            <input type="text" id="search_name2" size="30" /><br/>
+            <input type="text" id="search_name3" size="30" /><br/>
+            <input type="text" id="search_name4" size="30" /><br/>
+          </td>
+          <td>
+            <input type="text" id="search_url0" size="100" /><br/>
+            <input type="text" id="search_url1" size="100" /><br/>
+            <input type="text" id="search_url2" size="100" /><br/>
+            <input type="text" id="search_url3" size="100" /><br/>
+            <input type="text" id="search_url4" size="100" /><br/>
+          </td>
+        </tr>
+        <tr>
+          <th>cancel:</th>
+          <td>
+            <input type="text" id="cancel" size="7" />
+            <input type="hidden" id="cancel_code" />
+          </td>
+          <td>
+            ctrl: <input type="checkbox" checked="" id="cancel_ctrl" />
+            alt: <input type="checkbox" checked="" id="cancel_alt" />
+            shift: <input type="checkbox" checked="" id="cancel_shift" />
+          </td>
+        </tr>
+      </table>
+      <button id="save_options" class="btn btn-primary">設定を保存する</button>
+
+      <script type="text/javascript" src="jquery-1.9.0.min.js"></script>
+      <script type="text/javascript" src="prelude.min.js"></script>
+      <script type="text/javascript" src="keymap.js"></script>
+      <script type="text/javascript" src="command_settings.js"></script>
+      <script type="text/javascript" src="options.js"></script>
+    </div>
   </body>
 </html>

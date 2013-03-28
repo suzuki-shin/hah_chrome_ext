@@ -1,4 +1,4 @@
-var p, AVAILABLE_KEYCODES, res$, k, ref$, v, restoreSettings, saveSettings;
+var p, AVAILABLE_KEYCODES, res$, k, ref$, v, restoreSettings, saveSettings, version;
 p = prelude;
 res$ = [];
 for (k in ref$ = KEYMAP) {
@@ -226,8 +226,14 @@ saveSettings = function(){
     return console.log(e);
   });
 };
+version = function(){
+  var m;
+  m = chrome.runtime.getManifest();
+  return m.version;
+};
 $(function(){
   restoreSettings();
+  $('#version').text(version());
   $('#save_options').click(saveSettings);
   return $(document).keydown(function(e){
     var id, keyName;
