@@ -1,6 +1,6 @@
-* TODO
-- [X] optionページのスタイルつける
-- [X] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
+* TODO[25/46]
+- [ ] CLICKABLESにtextareaやボタンもちゃんと含まれるようにする
+- [ ] formFocusモードがちゃんと動くようにする
 - [ ] option.lsのリファクタ
 - [ ] google analytics入れる
 - [ ] モードが変わったときにnotifyだすようにする
@@ -21,6 +21,8 @@
  - [ ] facebookのグループでコメントつけるときにだめだった
 - [ ] helpの表示機能つける
 - [ ] コマンドをいろいろつける
+- [X] optionページのスタイルつける
+- [X] optionページにバージョンいれる。あとchangelogへのリンクもいれる？
 - [X] altのキーがきいていないっぽいのを調査して修正する
 - [X] shiftキーもいれる
 - [X] changelogつける(chromeウェブストアに)
