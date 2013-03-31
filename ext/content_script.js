@@ -24,7 +24,7 @@ Main = (function(){
     SHIFT_KEYCODE = 16;
     modKeys = [CTRL_KEYCODE, ALT_KEYCODE, SHIFT_KEYCODE];
     if (!in$(keyCode, modKeys)) {
-      log('(not CTRL_KEYCODE) and (not ALT_KEYCODE)');
+      log('not in modKeys');
       return false;
     }
     if (keyCode === CTRL_KEYCODE) {
@@ -71,16 +71,14 @@ Main.start = function(keyMapper, makeSelectorConsole, searchList){
     Main.mode = FormFocusMode;
   }
   $('body').on('focus', FORM_INPUT_FIELDS, function(){
-    log('form focus');
     return Main.mode = FormFocusMode;
   });
   return $('body').on('blur', FORM_INPUT_FIELDS, function(){
-    log('form blur');
     return Main.mode = NeutralMode;
   });
 };
 chrome.storage.sync.get('settings', function(d){
-  var keyMapper, selector_num, ref$, ref1$, ref2$, searchList, makeSelectorConsole;
+  var keyMapper, makeSelectorConsole, searchList, ref$;
   log(d);
   keyMapper = function(keyCode, ctrl, alt, shift){
     var KEY, k, v;
@@ -101,17 +99,14 @@ chrome.storage.sync.get('settings', function(d){
       return results$;
     }()));
   };
-  selector_num = (ref$ = (ref1$ = d.settings) != null ? (ref2$ = ref1$.selector) != null ? ref2$.NUM : void 8 : void 8) != null ? ref$ : DEFAULT_SELECTOR_NUM;
-  log(selector_num);
-  searchList = p.filter(function(l){
-    return l.url != null && l.url !== '';
-  }, (ref$ = d.settings.search_list) != null ? ref$ : COMMAND_LIST);
   makeSelectorConsole = function(list){
-    var ts, t;
+    var selector_num, ref$, ref1$, ref2$, ts, t;
+    log(list);
     if ($('#selectorList')) {
       $('#selectorList').remove();
     }
-    log(list);
+    selector_num = (ref$ = (ref1$ = d.settings) != null ? (ref2$ = ref1$.selector) != null ? ref2$.NUM : void 8 : void 8) != null ? ref$ : DEFAULT_SELECTOR_NUM;
+    log(selector_num);
     ts = p.concat(p.take(selector_num, (function(){
       var i$, ref$, len$, results$ = [];
       for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
@@ -123,6 +118,9 @@ chrome.storage.sync.get('settings', function(d){
     $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>');
     return $('#selectorList tr:first').addClass("selected");
   };
+  searchList = p.filter(function(l){
+    return l.url != null && l.url !== '';
+  }, (ref$ = d.settings.search_list) != null ? ref$ : COMMAND_LIST);
   return Main.start(keyMapper, makeSelectorConsole, searchList);
 });
 function in$(x, arr){
