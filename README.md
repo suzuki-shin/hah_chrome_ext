@@ -11,6 +11,6 @@ Compiling LiveScript continuously
 Dependencies
 -------
  * node.js http://nodejs.org/
- * LiveScript http://livescript.net/
+ * LiveScript http://livescript.net/ (ver 1.1.1)
  * prelude.ls http://gkz.github.com/prelude-ls/
- * jQuery http://jquery.com/
+ * jQuery http://jquery.com/ (ver 1.9.0)
