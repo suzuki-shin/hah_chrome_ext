@@ -1,3 +1,29 @@
+class Timer
+  @@finishTimer =->
+    console.log('finishTimer')
+    Notification.show('Uruguay.png', 'timer', 'time up!')
+
+  @@startTimer = (minutes) ->
+    console.log(minutes)
+    Notification.show('Uruguay.png', 'timer', 'timer start', 3)
+    chrome.alarms.create("timer", {delayInMinutes: minutes})
+    chrome.alarms.onAlarm.addListener(@@finishTimer)
+
+class Notification
+  @@show = (icon, title, text, shownSeconds) ->
+    if window.webkitNotifications
+      console.log("Notifications are supported!")
+      if webkitNotifications.checkPermission() is 0
+        n = webkitNotifications.createNotification(icon, title, text)
+        n.show()
+        if shownSeconds then setTimeout((-> n.cancel()), shownSeconds * 1000)
+        console.log('createNotification')
+      else
+        webkitNotifications.requestPermission()
+        console.log('requestPermission')
+    else
+      console.log("Notifications are not supported for this Browser/OS version yet.")
+
 tabSelect =->
   dfd = $.Deferred()
   chrome.tabs.query({currentWindow: true}, (tabs) ->
@@ -41,8 +67,18 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
     case "websearch"
       console.log('web search')
       chrome.tabs.create({url: msg.item.url + msg.item.query})
+    case "command"
+      console.log("command")
+      switch msg.item.url
+      case "timer"
+        console.log('timer')
+        Timer.startTimer(msg.item.query)
+      default
+        console.log('other command')
     default
       chrome.tabs.create({url: msg.item.url})
     select(sendResponse)
   true
 )
+
+Timer.startTimer(1)

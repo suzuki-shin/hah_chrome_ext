@@ -76,6 +76,10 @@ class SelectorMode
     [type, id] = $('#selectorList tr.selected').attr('id').split('-')
     url = $('#selectorList tr.selected span.url').text()
     query = $('#selectorInput').val()
+    log(id)
+    log(url)
+    log(type)
+    log(query)
     @@cancel(e)
     chrome.extension.sendMessage(
       {mes: "decideSelector", item:{id: id, url: url, type: type, query: query}},

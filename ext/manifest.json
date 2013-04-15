@@ -28,6 +28,6 @@
         "persistent": true
     },
     "options_page": "options.html",
-    "permissions": [ "history", "tabs", "bookmarks", "storage" ],
+    "permissions": [ "history", "tabs", "bookmarks", "storage", "notifications", "alarms" ],
     "manifest_version": 2
 }

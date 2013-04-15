@@ -115,6 +115,10 @@ SelectorMode = (function(){
     ref$ = $('#selectorList tr.selected').attr('id').split('-'), type = ref$[0], id = ref$[1];
     url = $('#selectorList tr.selected span.url').text();
     query = $('#selectorInput').val();
+    log(id);
+    log(url);
+    log(type);
+    log(query);
     constructor.cancel(e);
     chrome.extension.sendMessage({
       mes: "decideSelector",

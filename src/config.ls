@@ -1,4 +1,4 @@
-DEBUG_MODE = off
+DEBUG_MODE = on
 
 log = (x) -> console.log(x)
 if DEBUG_MODE is off

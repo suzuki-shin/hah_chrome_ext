@@ -120,7 +120,11 @@ chrome.storage.sync.get('settings', function(d){
   };
   searchList = p.filter(function(l){
     return l.url != null && l.url !== '';
-  }, (ref$ = d.settings.search_list) != null ? ref$ : COMMAND_LIST);
+  }, ((ref$ = d.settings.search_list) != null ? ref$ : COMMAND_LIST).concat({
+    title: 'timer',
+    url: 'timer',
+    type: 'command'
+  }));
   return Main.start(keyMapper, makeSelectorConsole, searchList);
 });
 function in$(x, arr){

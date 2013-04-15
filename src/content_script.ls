@@ -92,7 +92,7 @@ chrome.storage.sync.get('settings', ((d) ->
     $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
     $('#selectorList tr:first').addClass("selected")
 
-  searchList = p.filter(((l) -> l.url? and l.url isnt ''), d.settings.search_list ? COMMAND_LIST)
+  searchList = p.filter(((l) -> l.url? and l.url isnt ''), (d.settings.search_list ? COMMAND_LIST) +++ {title: 'timer', url: 'timer',  type: 'command'})
 
 
   Main.start(keyMapper, makeSelectorConsole, searchList)
