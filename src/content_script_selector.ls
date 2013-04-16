@@ -74,7 +74,7 @@ class SelectorMode
     e.preventDefault()
     log('decideSelector')
     [type, id] = $('#selectorList tr.selected').attr('id').split('-')
-    url = $('#selectorList tr.selected span.url').text()
+    url = $.trim($('#selectorList tr.selected span.url').text())
     query = $('#selectorInput').val()
     log(id)
     log(url)

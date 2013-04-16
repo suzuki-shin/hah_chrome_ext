@@ -88,7 +88,7 @@ chrome.storage.sync.get('settings', ((d) ->
     log(selector_num)
     ts = p.concat(
       p.take(selector_num,
-             ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>' for t in list]))
+             ['<tr id="' + t.type + '-' + t.id + '"><td><span class="title">['+ ITEM_TYPE_OF[t.type] + '] ' + t.title + '</span><span class="url">' + t.url + '</span></td></tr>' for t in list]))
     $('#selectorConsole').append('<table id="selectorList">' + ts + '</table>')
     $('#selectorList tr:first').addClass("selected")
 

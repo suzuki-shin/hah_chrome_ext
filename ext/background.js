@@ -4,11 +4,11 @@ Timer = (function(){
   var prototype = Timer.prototype, constructor = Timer;
   constructor.finishTimer = function(){
     console.log('finishTimer');
-    return Notification.show('Uruguay.png', 'timer', 'time up!');
+    return Notification.show('timer.png', 'time up!', '');
   };
   constructor.startTimer = function(minutes){
     console.log(minutes);
-    Notification.show('Uruguay.png', 'timer', 'timer start', 3);
+    Notification.show('timer.png', 'timer start', minutes + ' min', 3);
     chrome.alarms.create("timer", {
       delayInMinutes: minutes
     });
@@ -120,6 +120,7 @@ select = function(func){
   });
 };
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
+  var q, m;
   console.log(msg);
   if (msg.mes === "makeSelectorConsole") {
     select(sendResponse);
@@ -143,7 +144,9 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
       switch (msg.item.url) {
       case "timer":
         console.log('timer');
-        Timer.startTimer(msg.item.query);
+        q = msg.item.query;
+        m = q.match(/\d+/);
+        Timer.startTimer(parseInt(m[0]));
         break;
       default:
         console.log('other command');
@@ -158,4 +161,3 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
   }
   return true;
 });
-Timer.startTimer(1);

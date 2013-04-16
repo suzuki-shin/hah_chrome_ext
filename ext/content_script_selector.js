@@ -113,7 +113,7 @@ SelectorMode = (function(){
     e.preventDefault();
     log('decideSelector');
     ref$ = $('#selectorList tr.selected').attr('id').split('-'), type = ref$[0], id = ref$[1];
-    url = $('#selectorList tr.selected span.url').text();
+    url = $.trim($('#selectorList tr.selected span.url').text());
     query = $('#selectorInput').val();
     log(id);
     log(url);

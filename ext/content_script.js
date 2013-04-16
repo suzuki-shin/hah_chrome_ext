@@ -111,7 +111,7 @@ chrome.storage.sync.get('settings', function(d){
       var i$, ref$, len$, results$ = [];
       for (i$ = 0, len$ = (ref$ = list).length; i$ < len$; ++i$) {
         t = ref$[i$];
-        results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + ' </span><span class="url"> ' + t.url + '</span></td></tr>');
+        results$.push('<tr id="' + t.type + '-' + t.id + '"><td><span class="title">[' + ITEM_TYPE_OF[t.type] + '] ' + t.title + '</span><span class="url">' + t.url + '</span></td></tr>');
       }
       return results$;
     }())));

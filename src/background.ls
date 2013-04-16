@@ -1,11 +1,11 @@
 class Timer
   @@finishTimer =->
     console.log('finishTimer')
-    Notification.show('Uruguay.png', 'timer', 'time up!')
+    Notification.show('timer.png', 'time up!', '')
 
   @@startTimer = (minutes) ->
     console.log(minutes)
-    Notification.show('Uruguay.png', 'timer', 'timer start', 3)
+    Notification.show('timer.png', 'timer start', minutes + ' min', 3)
     chrome.alarms.create("timer", {delayInMinutes: minutes})
     chrome.alarms.onAlarm.addListener(@@finishTimer)
 
@@ -72,7 +72,9 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
       switch msg.item.url
       case "timer"
         console.log('timer')
-        Timer.startTimer(msg.item.query)
+        q = msg.item.query
+        m = q.match(/\d+/)
+        Timer.startTimer(parseInt(m[0]))
       default
         console.log('other command')
     default
@@ -80,5 +82,3 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
     select(sendResponse)
   true
 )
-
-Timer.startTimer(1)
