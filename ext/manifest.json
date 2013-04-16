@@ -29,6 +29,6 @@
     },
     "web_accessible_resources": [ "timer.png" ],
     "options_page": "options.html",
-    "permissions": [ "history", "tabs", "bookmarks", "storage", "notifications", "alarms" ],
+    "permissions": [ "history", "tabs", "bookmarks", "storage", "notifications" ],
     "manifest_version": 2
 }

@@ -9,10 +9,7 @@ Timer = (function(){
   constructor.startTimer = function(minutes){
     console.log(minutes);
     Notification.show('timer.png', 'timer start', minutes + ' min', 3);
-    chrome.alarms.create("timer", {
-      delayInMinutes: minutes
-    });
-    return chrome.alarms.onAlarm.addListener(constructor.finishTimer);
+    return setTimeout(constructor.finishTimer, minutes * 1000 * 60);
   };
   function Timer(){}
   return Timer;

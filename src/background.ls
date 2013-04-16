@@ -6,8 +6,7 @@ class Timer
   @@startTimer = (minutes) ->
     console.log(minutes)
     Notification.show('timer.png', 'timer start', minutes + ' min', 3)
-    chrome.alarms.create("timer", {delayInMinutes: minutes})
-    chrome.alarms.onAlarm.addListener(@@finishTimer)
+    setTimeout(@@finishTimer, minutes * 1000 * 60)
 
 class Notification
   @@show = (icon, title, text, shownSeconds) ->

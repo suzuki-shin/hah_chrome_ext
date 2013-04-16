@@ -1,4 +1,8 @@
-* TODO[25/46]
+* TODO[28/53]
+- [-] timer機能
+ - [X] 指定分後にnotificationだす機能
+ - [ ] timerに数字無しで入力すると現在のtimerを表示する機能
+ - [ ] timerをキャンセルする機能
 - [ ] selectorをtabs.updateのタイミングで作り直す(全タブ共有で良いと思う)
 - [ ] 除外urlを自分で設定できるようにする
 - [ ] CLICKABLESにtextareaやボタンもちゃんと含まれるようにする
