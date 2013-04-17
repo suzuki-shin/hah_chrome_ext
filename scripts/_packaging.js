@@ -18,7 +18,7 @@ if (fs.existsSync(package_path)) {
 }
 
 // packaging
-exec("zip " + package_path + " ext/manifest.json ext/*.js ext/*.html ext/*.css",
+exec("zip " + package_path + " ext/manifest.json ext/*.js ext/*.html ext/*.css ext/*.png",
      function(err, stdout, stderr) {
          if (err !== null) {
              console.log('stderr: ' + stderr);

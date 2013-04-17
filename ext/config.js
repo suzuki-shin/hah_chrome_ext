@@ -1,5 +1,5 @@
 var DEBUG_MODE, log;
-DEBUG_MODE = true;
+DEBUG_MODE = false;
 log = function(x){
   return console.log(x);
 };
