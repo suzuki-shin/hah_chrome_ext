@@ -4,7 +4,7 @@ Timer = (function(){
   var prototype = Timer.prototype, constructor = Timer;
   constructor.finishTimer = function(){
     console.log('finishTimer');
-    return Notification.show('timer.png', 'time up!', '');
+    return Notification.showHtml('timer.png', 'time up!', '');
   };
   constructor.startTimer = function(minutes){
     console.log(minutes);
@@ -23,6 +23,27 @@ Notification = (function(){
       console.log("Notifications are supported!");
       if (webkitNotifications.checkPermission() === 0) {
         n = webkitNotifications.createNotification(icon, title, text);
+        n.show();
+        if (shownSeconds) {
+          setTimeout(function(){
+            return n.cancel();
+          }, shownSeconds * 1000);
+        }
+        return console.log('createNotification');
+      } else {
+        webkitNotifications.requestPermission();
+        return console.log('requestPermission');
+      }
+    } else {
+      return console.log("Notifications are not supported for this Browser/OS version yet.");
+    }
+  };
+  constructor.showHtml = function(icon, title, text, shownSeconds){
+    var n;
+    if (window.webkitNotifications) {
+      console.log("Notifications are supported!");
+      if (webkitNotifications.checkPermission() === 0) {
+        n = webkitNotifications.createHTMLNotification("notification.html");
         n.show();
         if (shownSeconds) {
           setTimeout(function(){

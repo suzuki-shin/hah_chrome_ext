@@ -1,7 +1,7 @@
 class Timer
   @@finishTimer =->
     console.log('finishTimer')
-    Notification.show('timer.png', 'time up!', '')
+    Notification.showHtml('timer.png', 'time up!', '')
 
   @@startTimer = (minutes) ->
     console.log(minutes)
@@ -22,6 +22,22 @@ class Notification
         console.log('requestPermission')
     else
       console.log("Notifications are not supported for this Browser/OS version yet.")
+
+  @@showHtml = (icon, title, text, shownSeconds) ->
+    if window.webkitNotifications
+      console.log("Notifications are supported!")
+      if webkitNotifications.checkPermission() is 0
+        n = webkitNotifications.createHTMLNotification("notification.html")
+        n.show()
+        if shownSeconds then setTimeout((-> n.cancel()), shownSeconds * 1000)
+        console.log('createNotification')
+      else
+        webkitNotifications.requestPermission()
+        console.log('requestPermission')
+    else
+      console.log("Notifications are not supported for this Browser/OS version yet.")
+
+
 
 tabSelect =->
   dfd = $.Deferred()
