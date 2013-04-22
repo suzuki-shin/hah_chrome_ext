@@ -1,15 +1,38 @@
-var Timer, Notification, tabSelect, historySelect, bookmarkSelect, select;
+var TimerInstance, Timer, Notification, tabSelect, historySelect, bookmarkSelect, select;
+TimerInstance = (function(){
+  TimerInstance.displayName = 'TimerInstance';
+  var prototype = TimerInstance.prototype, constructor = TimerInstance;
+  function TimerInstance(startTime, minutes){
+    this.startTime = startTime;
+    this.minutes = minutes;
+  }
+  prototype.startTime = void 8;
+  prototype.minutes = 0;
+  return TimerInstance;
+}());
 Timer = (function(){
   Timer.displayName = 'Timer';
   var prototype = Timer.prototype, constructor = Timer;
-  constructor.finishTimer = function(){
-    console.log('finishTimer');
-    return Notification.showHtml('timer.png', 'time up!', '');
-  };
+  constructor.timerInstances = [];
   constructor.startTimer = function(minutes){
+    var startTime;
     console.log(minutes);
     Notification.show('timer.png', 'timer start', minutes + ' min', 3);
-    return setTimeout(constructor.finishTimer, minutes * 1000 * 60);
+    startTime = Date.now();
+    constructor.timerInstances[startTime] = new TimerInstance(startTime, minutes);
+    return setTimeout(function(){
+      return constructor.finishTimer(startTime);
+    }, minutes * 1000 * 60);
+  };
+  constructor.finishTimer = function(startTime){
+    var ref$, ref1$;
+    console.log('finishTimer');
+    Notification.showHtml('timer.png', 'time up!', '');
+    return ref1$ = (ref$ = constructor.timerInstances)[startTime], delete ref$[startTime], ref1$;
+  };
+  constructor.listTimer = function(){
+    console.log('listTimer');
+    return console.log(constructor.timerInstances);
   };
   function Timer(){}
   return Timer;
@@ -164,7 +187,12 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
         console.log('timer');
         q = msg.item.query;
         m = q.match(/\d+/);
-        Timer.startTimer(parseInt(m[0]));
+        console.log(m);
+        if (m != null && m[0] != null) {
+          Timer.startTimer(parseInt(m[0]));
+        } else {
+          Timer.listTimer();
+        }
         break;
       default:
         console.log('other command');
