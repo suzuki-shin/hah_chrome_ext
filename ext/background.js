@@ -14,11 +14,26 @@ Timer = (function(){
   Timer.displayName = 'Timer';
   var prototype = Timer.prototype, constructor = Timer;
   constructor.timerInstances = [];
-  constructor.startTimer = function(minutes){
+  constructor.startTimerFor = function(minutes){
     var startTime;
     console.log(minutes);
     Notification.show('timer.png', 'timer start', minutes + ' min', 3);
     startTime = new Date();
+    constructor.timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes);
+    return setTimeout(function(){
+      return constructor.finishTimer(startTime);
+    }, minutes * 1000 * 60);
+  };
+  constructor.startTimerTill = function(time){
+    var startTime, month, _fTimeStr, finishTime, minutes;
+    console.log(time);
+    Notification.show('timer.png', 'timer start', 'until ' + time, 3);
+    startTime = new Date();
+    month = parseInt(startTime.getMonth()) + 1;
+    _fTimeStr = startTime.getFullYear() + '/' + month + '/' + startTime.getDate() + ' ' + time;
+    console.log(_fTimeStr);
+    finishTime = new Date(_fTimeStr);
+    minutes = parseInt((finishTime.getTime() - startTime.getTime()) / (1000 * 60));
     constructor.timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes);
     return setTimeout(function(){
       return constructor.finishTimer(startTime);
@@ -173,7 +188,7 @@ select = function(func){
   });
 };
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
-  var q, m;
+  var q, m, t;
   console.log(msg);
   if (msg.mes === "makeSelectorConsole") {
     select(sendResponse);
@@ -198,10 +213,16 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
       case "timer":
         console.log('timer');
         q = msg.item.query;
-        m = q.match(/\d+/);
+        m = q.split(' ');
         console.log(m);
-        if (m != null && m[0] != null) {
-          Timer.startTimer(parseInt(m[0]));
+        if (m != null && m[1] != null) {
+          t = m[1].match(/\d+\:\d+/);
+          if (t != null && t[0]) {
+            console.log(t);
+            Timer.startTimerTill(t[0]);
+          } else {
+            Timer.startTimerFor(parseInt(m[1]));
+          }
         } else {
           Timer.listTimer();
         }

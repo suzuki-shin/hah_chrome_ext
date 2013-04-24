@@ -8,10 +8,22 @@ class TimerInstance
 class Timer
   @@timerInstances = []
 
-  @@startTimer = (minutes) ->
+  @@startTimerFor = (minutes) ->
     console.log(minutes)
     Notification.show('timer.png', 'timer start', minutes + ' min', 3)
     startTime = new Date()
+    @@timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes)
+    setTimeout((-> @@finishTimer(startTime)), minutes * 1000 * 60)
+
+  @@startTimerTill = (time) ->
+    console.log(time)
+    Notification.show('timer.png', 'timer start', 'until ' + time, 3)
+    startTime = new Date()
+    month = parseInt(startTime.getMonth()) + 1
+    _fTimeStr = startTime.getFullYear() + '/' + month + '/' + startTime.getDate() + ' ' + time
+    console.log(_fTimeStr)
+    finishTime = new Date(_fTimeStr)
+    minutes = parseInt((finishTime.getTime() - startTime.getTime()) / (1000 * 60))
     @@timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes)
     setTimeout((-> @@finishTimer(startTime)), minutes * 1000 * 60)
 
@@ -108,10 +120,16 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
       case "timer"
         console.log('timer')
         q = msg.item.query
-        m = q.match(/\d+/)
+#         m = q.match(/\d+/)
+        m = q.split(' ')
         console.log(m)
-        if m? and m[0]?
-          Timer.startTimer(parseInt(m[0]))
+        if m? and m[1]?
+          t = m[1].match(/\d+\:\d+/)
+          if t? and t[0]
+            console.log(t)
+            Timer.startTimerTill(t[0])
+          else
+            Timer.startTimerFor(parseInt(m[1]))
         else
           Timer.listTimer()
       default
