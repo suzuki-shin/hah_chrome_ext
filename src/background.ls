@@ -11,19 +11,22 @@ class Timer
   @@startTimer = (minutes) ->
     console.log(minutes)
     Notification.show('timer.png', 'timer start', minutes + ' min', 3)
-    startTime = Date.now()
-    @@timerInstances[startTime] = new TimerInstance(startTime, minutes)
+    startTime = new Date()
+    @@timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes)
     setTimeout((-> @@finishTimer(startTime)), minutes * 1000 * 60)
 
   @@finishTimer = (startTime) ->
     console.log('finishTimer')
-    Notification.showHtml('timer.png', 'time up!', '')
-    delete @@timerInstances[startTime]
+    key = startTime.getTime()
+    Notification.show('timer.png', 'time up!', @@timerInstances[key].minutes + ' min')
+    delete @@timerInstances[key]
 
   @@listTimer =->
     console.log('listTimer')
     console.log(@@timerInstances)
-#     Notification.show('timer.png', 'timer list', list)
+    list = [t.minutes + ' min' for s, t of @@timerInstances].join(", ")
+    console.log(list)
+    Notification.show('timer.png', 'timer list', list)
 
 class Notification
   @@show = (icon, title, text, shownSeconds) ->

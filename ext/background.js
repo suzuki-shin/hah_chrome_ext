@@ -18,21 +18,33 @@ Timer = (function(){
     var startTime;
     console.log(minutes);
     Notification.show('timer.png', 'timer start', minutes + ' min', 3);
-    startTime = Date.now();
-    constructor.timerInstances[startTime] = new TimerInstance(startTime, minutes);
+    startTime = new Date();
+    constructor.timerInstances[startTime.getTime()] = new TimerInstance(startTime, minutes);
     return setTimeout(function(){
       return constructor.finishTimer(startTime);
     }, minutes * 1000 * 60);
   };
   constructor.finishTimer = function(startTime){
-    var ref$, ref1$;
+    var key, ref$, ref1$;
     console.log('finishTimer');
-    Notification.showHtml('timer.png', 'time up!', '');
-    return ref1$ = (ref$ = constructor.timerInstances)[startTime], delete ref$[startTime], ref1$;
+    key = startTime.getTime();
+    Notification.show('timer.png', 'time up!', constructor.timerInstances[key].minutes + ' min');
+    return ref1$ = (ref$ = constructor.timerInstances)[key], delete ref$[key], ref1$;
   };
   constructor.listTimer = function(){
+    var list, s, t;
     console.log('listTimer');
-    return console.log(constructor.timerInstances);
+    console.log(constructor.timerInstances);
+    list = (function(){
+      var ref$, results$ = [];
+      for (s in ref$ = constructor.timerInstances) {
+        t = ref$[s];
+        results$.push(t.minutes + ' min');
+      }
+      return results$;
+    }()).join(", ");
+    console.log(list);
+    return Notification.show('timer.png', 'timer list', list);
   };
   function Timer(){}
   return Timer;
