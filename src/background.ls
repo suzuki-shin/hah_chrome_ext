@@ -2,7 +2,7 @@ class TimerInstance
   (startTime, minutes) ->
     @startTime = startTime
     @minutes = minutes
-  startTime: undefined
+  startTime: void
   minutes: 0
 
 class Timer
@@ -101,6 +101,20 @@ select = (func) ->
     func(ts.concat(hs, bs))
   )
 
+timer = (query) ->
+  console.log('timer')
+  m = query.split(' ')
+  console.log(m)
+  if m? and m[1]?
+    t = m[1].match(/\d+\:\d+/)
+    if t? and t[0]
+      console.log(t)
+      Timer.startTimerTill(t[0])
+    else
+      Timer.startTimerFor(parseInt(m[1]))
+  else
+    Timer.listTimer()
+
 chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
   console.log(msg)
   if msg.mes == "makeSelectorConsole"
@@ -118,20 +132,7 @@ chrome.extension.onMessage.addListener((msg, sender, sendResponse) ->
       console.log("command")
       switch msg.item.url
       case "timer"
-        console.log('timer')
-        q = msg.item.query
-#         m = q.match(/\d+/)
-        m = q.split(' ')
-        console.log(m)
-        if m? and m[1]?
-          t = m[1].match(/\d+\:\d+/)
-          if t? and t[0]
-            console.log(t)
-            Timer.startTimerTill(t[0])
-          else
-            Timer.startTimerFor(parseInt(m[1]))
-        else
-          Timer.listTimer()
+        timer(msg.item.query)
       default
         console.log('other command')
     default

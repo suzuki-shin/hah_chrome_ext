@@ -1,4 +1,4 @@
-var TimerInstance, Timer, Notification, tabSelect, historySelect, bookmarkSelect, select;
+var TimerInstance, Timer, Notification, tabSelect, historySelect, bookmarkSelect, select, timer;
 TimerInstance = (function(){
   TimerInstance.displayName = 'TimerInstance';
   var prototype = TimerInstance.prototype, constructor = TimerInstance;
@@ -187,8 +187,24 @@ select = function(func){
     return func(ts.concat(hs, bs));
   });
 };
+timer = function(query){
+  var m, t;
+  console.log('timer');
+  m = query.split(' ');
+  console.log(m);
+  if (m != null && m[1] != null) {
+    t = m[1].match(/\d+\:\d+/);
+    if (t != null && t[0]) {
+      console.log(t);
+      return Timer.startTimerTill(t[0]);
+    } else {
+      return Timer.startTimerFor(parseInt(m[1]));
+    }
+  } else {
+    return Timer.listTimer();
+  }
+};
 chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
-  var q, m, t;
   console.log(msg);
   if (msg.mes === "makeSelectorConsole") {
     select(sendResponse);
@@ -211,21 +227,7 @@ chrome.extension.onMessage.addListener(function(msg, sender, sendResponse){
       console.log("command");
       switch (msg.item.url) {
       case "timer":
-        console.log('timer');
-        q = msg.item.query;
-        m = q.split(' ');
-        console.log(m);
-        if (m != null && m[1] != null) {
-          t = m[1].match(/\d+\:\d+/);
-          if (t != null && t[0]) {
-            console.log(t);
-            Timer.startTimerTill(t[0]);
-          } else {
-            Timer.startTimerFor(parseInt(m[1]));
-          }
-        } else {
-          Timer.listTimer();
-        }
+        timer(msg.item.query);
         break;
       default:
         console.log('other command');
